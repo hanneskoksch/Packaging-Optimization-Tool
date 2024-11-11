@@ -2,10 +2,13 @@ import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
 import Upload from "./components/upload/Upload";
 import CheckData from "./components/check-data/CheckData";
+import { ICsvInteraction, ICsvVariable } from "./types/csv-types";
 
 export function App() {
-  const [variables, setVariables] = useState<null | string[][]>();
-  const [interactions, setInteractions] = useState<null | string[][]>();
+  const [variables, setVariables] = useState<null | ICsvVariable[]>(null);
+  const [interactions, setInteractions] = useState<null | ICsvInteraction[]>(
+    null,
+  );
 
   return (
     <div className="m-4">
@@ -17,7 +20,9 @@ export function App() {
         </TabsList>
         <TabsContent value="upload">
           <Upload
+            variables={variables}
             setVariables={setVariables}
+            interactions={interactions}
             setInteractions={setInteractions}
           />
         </TabsContent>

@@ -1,18 +1,27 @@
+import { ICsvInteraction, ICsvVariable } from "@/types/csv-types";
+import { rowDataToInteractions, rowDataToVariables } from "@/utils/csv-parser";
 import { useEffect } from "react";
 import { usePapaParse } from "react-papaparse";
 
-interface UploadProps {
-  setVariables: (data: string[][]) => void;
-  setInteractions: (data: string[][]) => void;
+interface IProps {
+  variables: ICsvVariable[] | null;
+  setVariables: (data: ICsvVariable[]) => void;
+  interactions: ICsvInteraction[] | null;
+  setInteractions: (data: ICsvInteraction[]) => void;
 }
 
-export default function Upload({ setVariables, setInteractions }: UploadProps) {
+export default function Upload({
+  variables,
+  setVariables,
+  interactions,
+  setInteractions,
+}: IProps) {
   const { readString } = usePapaParse();
 
   useEffect(() => {
     const handleReadString = async (
       fileName: string,
-      callback: (data: string[][]) => void,
+      callback: (rows: unknown[]) => void,
     ) => {
       const csvData = await fetch(fileName);
       const csvString = await csvData.text();
@@ -20,19 +29,34 @@ export default function Upload({ setVariables, setInteractions }: UploadProps) {
       readString(csvString, {
         worker: true,
         complete: (results) => {
-          console.log("---------------------------");
-          console.log(results.data);
-          console.log("---------------------------");
-          callback(results.data as string[][]);
+          // console.log("---------------------------");
+          // console.log(results.data);
+          // console.log("---------------------------");
+          callback(results.data);
         },
       });
     };
-    handleReadString("/Variablen.csv", setVariables);
-    handleReadString("/Wechselwirkungen.csv", setInteractions);
+
+    const parseVariables = async () => {
+      const callback = (variablesRows: unknown[]) => {
+        setVariables(rowDataToVariables(variablesRows));
+      };
+      await handleReadString("/Variablen.csv", callback);
+    };
+
+    const parseInteractions = async () => {
+      const callback = (interactionsRows: unknown[]) => {
+        setInteractions(rowDataToInteractions(interactionsRows));
+      };
+      await handleReadString("/Wechselwirkungen.csv", callback);
+    };
+
+    parseVariables();
+    parseInteractions();
   }, [readString, setInteractions, setVariables]);
 
-  if (!setVariables || !setInteractions) {
-    return <div>Loading</div>;
+  if (!variables || !interactions) {
+    return <div>Loading...</div>;
   }
 
   return <div>CSV files loaded</div>;
