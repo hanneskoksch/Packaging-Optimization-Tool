@@ -73,9 +73,10 @@ test("Create matrix from variables and interactions", () => {
   ];
 
   expect(createMatrix(variables, interactions)).toStrictEqual([
-    [null, 45, 69, 17],
-    [45, null, -1, 2],
-    [69, 1, null, null],
-    [17, null, null, null],
+    [null, 45, 69, 17, null],
+    [45, null, -1, 2, 1],
+    [69, 1, null, null, 1],
+    [17, null, null, null, 0],
+    [null, 1, -1, 2, null],
   ]);
 });
