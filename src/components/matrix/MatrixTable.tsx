@@ -46,7 +46,7 @@ function MatrixTable({ variables, interactions }: IProps) {
 
   return (
     <div>
-      <Table className="text-xs">
+      <Table className="text-xs mb-5">
         <TableHeader>
           <TableRow>
             <TableHead colSpan={5} />
@@ -77,7 +77,9 @@ function MatrixTable({ variables, interactions }: IProps) {
                 return <TableHead className="h-7 border" />;
               } else {
                 return (
-                  <TableHead className="h-7 border">{matrixEntry}</TableHead>
+                  <TableHead className="h-7 border text-center">
+                    {matrixEntry}
+                  </TableHead>
                 );
               }
             })}
@@ -100,7 +102,7 @@ function MatrixTable({ variables, interactions }: IProps) {
               </TableCell>
               {matrix[index + 1].map((matrixEntry, index) => (
                 <TableCell
-                  className={`border py-1 ${showColors && index > 0 && index < matrix.length - 1 && getTailwindColor(matrixEntry)}`}
+                  className={`border py-1  text-center ${showColors && index > 0 && index < matrix.length - 1 && getTailwindColor(matrixEntry)}`}
                 >
                   {matrixEntry}
                 </TableCell>
@@ -112,7 +114,9 @@ function MatrixTable({ variables, interactions }: IProps) {
               Passivsumme
             </TableCell>
             {matrix[matrix.length - 1].slice(1).map((matrixEntry) => (
-              <TableCell className="border py-1">{matrixEntry}</TableCell>
+              <TableCell className="border py-1 text-center">
+                {matrixEntry}
+              </TableCell>
             ))}
           </TableRow>
         </TableBody>
