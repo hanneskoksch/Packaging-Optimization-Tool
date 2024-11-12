@@ -3,6 +3,8 @@ import { ICsvInteraction, ICsvVariable } from "@/types/csv-types";
 // disable eslint for unknown csv data
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const rowDataToVariables = (rows: any[]): ICsvVariable[] => {
+  // remove the header row
+  rows.shift();
   return rows.map((row) => ({
     sustainability: (row[0] as string)
       .split("/")
@@ -26,6 +28,8 @@ const rowDataToVariables = (rows: any[]): ICsvVariable[] => {
 // disable eslint for unknown csv data
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const rowDataToInteractions = (rows: any[]): ICsvInteraction[] => {
+  // remove the header row
+  rows.shift();
   return rows.map((row) => ({
     variableId: row[0] as number,
     variable: row[1] as string,

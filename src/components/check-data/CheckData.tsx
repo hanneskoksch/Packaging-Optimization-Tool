@@ -37,7 +37,7 @@ function CheckData({ variables, interactions }: IProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {variables.slice(1).map((row, rowIndex) => (
+            {variables.map((row, rowIndex) => (
               <TableRow key={rowIndex}>
                 <TableCell>{row.sustainability.join("/")}</TableCell>
                 <TableCell className="italic">{row.category}</TableCell>
@@ -74,7 +74,7 @@ function CheckData({ variables, interactions }: IProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {interactions.slice(1).map((row, rowIndex) => (
+            {interactions.map((row, rowIndex) => (
               <TableRow key={rowIndex}>
                 <TableCell>{row.variableId}</TableCell>
                 <TableCell>{row.variable}</TableCell>
