@@ -1,7 +1,8 @@
 import { useState } from "react";
+import CheckData from "./components/check-data/CheckData";
+import MatrixTable from "./components/matrix/MatrixTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
 import Upload from "./components/upload/Upload";
-import CheckData from "./components/check-data/CheckData";
 import { ICsvInteraction, ICsvVariable } from "./types/csv-types";
 
 export function App() {
@@ -33,7 +34,13 @@ export function App() {
             <div>Upload a CSV file first.</div>
           )}
         </TabsContent>
-        <TabsContent value="matrix">Matrix Component</TabsContent>
+        <TabsContent value="matrix">
+          {variables && interactions ? (
+            <MatrixTable variables={variables} interactions={interactions} />
+          ) : (
+            <div>Upload a CSV file first.</div>
+          )}
+        </TabsContent>
       </Tabs>
     </div>
   );
