@@ -1,3 +1,5 @@
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import {
   Table,
   TableBody,
@@ -8,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { ICsvInteraction, ICsvVariable } from "@/types/csv-types";
 import { createMatrix } from "@/utils/matrix-calculations";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 interface IProps {
   variables: ICsvVariable[];
@@ -16,11 +18,31 @@ interface IProps {
 }
 
 function MatrixTable({ variables, interactions }: IProps) {
+  const [showColors, setShowColors] = useState(false);
+
   const matrix = useMemo(
     () => createMatrix(variables, interactions),
     [variables, interactions],
   );
 
+  const getTailwindColor = (value: number | null) => {
+    value = Number(value);
+    if (value === null) {
+      return;
+    } else if (value === 1) {
+      return "bg-red-100";
+    } else if (value === 2) {
+      return "bg-red-200";
+    } else if (value === 3) {
+      return "bg-red-300";
+    } else if (value === -1) {
+      return "bg-green-100";
+    } else if (value === -2) {
+      return "bg-green-200";
+    } else if (value === -3) {
+      return "bg-green-300";
+    }
+  };
 
   return (
     <div>
@@ -76,8 +98,12 @@ function MatrixTable({ variables, interactions }: IProps) {
               <TableCell className="border py-1 whitespace-nowrap">
                 {variable.variableSource.join(", ")}
               </TableCell>
-              {matrix[index + 1].map((matrixEntry) => (
-                <TableCell className="border py-1">{matrixEntry}</TableCell>
+              {matrix[index + 1].map((matrixEntry, index) => (
+                <TableCell
+                  className={`border py-1 ${showColors && index > 0 && index < matrix.length - 1 && getTailwindColor(matrixEntry)}`}
+                >
+                  {matrixEntry}
+                </TableCell>
               ))}
             </TableRow>
           ))}
@@ -91,6 +117,13 @@ function MatrixTable({ variables, interactions }: IProps) {
           </TableRow>
         </TableBody>
       </Table>
+      <div className="flex items-center space-x-2 mt-5">
+        <Switch
+          id="show-matrix-colors"
+          onCheckedChange={() => setShowColors(!showColors)}
+        />
+        <Label htmlFor="show-matrix-colors">Show colors</Label>
+      </div>
     </div>
   );
 }
