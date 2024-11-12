@@ -21,38 +21,41 @@ function MatrixTable({ variables, interactions }: IProps) {
     [variables, interactions],
   );
 
-  console.log(matrix);
 
   return (
     <div>
       <Table className="text-xs">
         <TableHeader>
           <TableRow>
-            <TableHead className="align-bottom">Sustainability</TableHead>
-            <TableHead className="align-bottom">Category</TableHead>
-            <TableHead className="align-bottom">Variable</TableHead>
-            <TableHead className="align-bottom">Sources</TableHead>
-            <TableHead className="align-bottom">ID</TableHead>
+            <TableHead colSpan={5} />
+            {variables.map((variable) => (
+              <TableHead className="h-48 whitespace-nowrap align-bottom">
+                <div className="origin-bottom-left -rotate-[45deg] translate-x-[36px] w-[30px]">
+                  <span className="border-b border-solid p-1">
+                    {variable.variable}
+                  </span>
+                </div>
+              </TableHead>
+            ))}
+            <TableHead className="h-48 whitespace-nowrap align-bottom font-bold">
+              <div className="origin-bottom-left -rotate-[45deg] translate-x-[36px] w-[30px]">
+                <span className="border-b border-solid p-1">Aktivsumme</span>
+              </div>
+            </TableHead>
+          </TableRow>
+
+          <TableRow>
+            <TableHead className="h-7 border">Sustainability</TableHead>
+            <TableHead className="h-7 border">Category</TableHead>
+            <TableHead className="h-7 border">Variable</TableHead>
+            <TableHead className="h-7 border">Sources</TableHead>
+            <TableHead className="h-7 border">ID</TableHead>
             {matrix[0].slice(1).map((matrixEntry, index) => {
               if (index === matrix[0].slice(1).length - 1) {
-                return (
-                  <TableHead className="h-48 whitespace-nowrap align-bottom font-bold">
-                    <div className="origin-bottom-left -rotate-[45deg] translate-x-[36px] w-[30px]">
-                      <span className="border-b border-solid p-1">
-                        Aktivsumme
-                      </span>
-                    </div>
-                  </TableHead>
-                );
+                return <TableHead className="h-7 border" />;
               } else {
                 return (
-                  <TableHead className="h-48 whitespace-nowrap align-bottom">
-                    <div className="origin-bottom-left -rotate-[45deg] translate-x-[36px] w-[30px]">
-                      <span className="border-b border-solid p-1">
-                        {matrixEntry}
-                      </span>
-                    </div>
-                  </TableHead>
+                  <TableHead className="h-7 border">{matrixEntry}</TableHead>
                 );
               }
             })}
