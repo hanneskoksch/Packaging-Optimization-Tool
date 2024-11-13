@@ -106,7 +106,6 @@ export default function CSVUpload({ setVariables, setInteractions }: IProps) {
             acceptedFile,
             ProgressBar,
             getRemoveFileProps,
-            Remove,
           }: any) => (
             <div
               {...getRootProps()}
