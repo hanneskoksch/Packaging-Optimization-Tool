@@ -50,8 +50,11 @@ function MatrixTable({ variables, interactions }: IProps) {
         <TableHeader>
           <TableRow>
             <TableHead colSpan={5} />
-            {variables.map((variable) => (
-              <TableHead className="h-48 whitespace-nowrap align-bottom">
+            {variables.map((variable, index) => (
+              <TableHead
+                key={index}
+                className="h-48 whitespace-nowrap align-bottom"
+              >
                 <div className="origin-bottom-left -rotate-[45deg] translate-x-[36px] w-[30px]">
                   <span className="border-b border-solid p-1">
                     {variable.variable}
@@ -74,10 +77,10 @@ function MatrixTable({ variables, interactions }: IProps) {
             <TableHead className="h-7 border">ID</TableHead>
             {matrix[0].slice(1).map((matrixEntry, index) => {
               if (index === matrix[0].slice(1).length - 1) {
-                return <TableHead className="h-7 border" />;
+                return <TableHead key={index} className="h-7 border" />;
               } else {
                 return (
-                  <TableHead className="h-7 border text-center">
+                  <TableHead key={index} className="h-7 border text-center">
                     {matrixEntry}
                   </TableHead>
                 );
@@ -102,6 +105,7 @@ function MatrixTable({ variables, interactions }: IProps) {
               </TableCell>
               {matrix[index + 1].map((matrixEntry, index) => (
                 <TableCell
+                  key={index}
                   className={`border py-1  text-center ${showColors && index > 0 && index < matrix.length - 1 && getTailwindColor(matrixEntry)}`}
                 >
                   {matrixEntry}
@@ -113,8 +117,8 @@ function MatrixTable({ variables, interactions }: IProps) {
             <TableCell className="text-right font-bold" colSpan={5}>
               Passivsumme
             </TableCell>
-            {matrix[matrix.length - 1].slice(1).map((matrixEntry) => (
-              <TableCell className="border py-1 text-center">
+            {matrix[matrix.length - 1].slice(1).map((matrixEntry, index) => (
+              <TableCell key={index} className="border py-1 text-center">
                 {matrixEntry}
               </TableCell>
             ))}
