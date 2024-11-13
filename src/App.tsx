@@ -21,9 +21,7 @@ export function App() {
         </TabsList>
         <TabsContent value="upload">
           <Upload
-            variables={variables}
             setVariables={setVariables}
-            interactions={interactions}
             setInteractions={setInteractions}
           />
         </TabsContent>
