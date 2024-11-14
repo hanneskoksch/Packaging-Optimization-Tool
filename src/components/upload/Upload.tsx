@@ -71,7 +71,7 @@ export default function CSVUpload({ setVariables, setInteractions }: IProps) {
                   </div>
                 </>
               ) : (
-                <div className="justify-items-center space-y-3">
+                <div className="flex flex-col items-center space-y-3">
                   <Upload size={32} className="text-gray-500" />
                   <p>
                     Drag & drop your Variables CSV file here, or click to
@@ -133,7 +133,7 @@ export default function CSVUpload({ setVariables, setInteractions }: IProps) {
                   </div>
                 </>
               ) : (
-                <div className="justify-items-center space-y-3">
+                <div className="flex flex-col items-center space-y-3">
                   <Upload size={32} className="text-gray-500" />
                   <p>
                     Drag & drop your Interactions CSV file here, or click to
