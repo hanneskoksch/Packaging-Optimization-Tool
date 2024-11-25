@@ -113,8 +113,10 @@ function MatrixTable({ variables, interactions }: IProps) {
                   key={index}
                   className={`border py-1  text-center ${showColors && index > 0 && index < matrix.length - 1 && getTailwindColor(matrixEntry?.value)}`}
                 >
-                  <HoverCard>
-                    <HoverCardTrigger>{matrixEntry?.value}</HoverCardTrigger>
+                  <HoverCard openDelay={200}>
+                    <HoverCardTrigger asChild>
+                      <div>{matrixEntry?.value}</div>
+                    </HoverCardTrigger>
                     <HoverCardContent>
                       {matrixEntry?.source && (
                         <div className="text-xs">
