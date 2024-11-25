@@ -11,6 +11,11 @@ import {
 import { ICsvInteraction, ICsvVariable } from "@/types/csv-types";
 import { createMatrix } from "@/utils/matrix-calculations";
 import { useMemo, useState } from "react";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 interface IProps {
   variables: ICsvVariable[];
@@ -108,7 +113,17 @@ function MatrixTable({ variables, interactions }: IProps) {
                   key={index}
                   className={`border py-1  text-center ${showColors && index > 0 && index < matrix.length - 1 && getTailwindColor(matrixEntry?.value)}`}
                 >
-                  {matrixEntry?.value}
+                  <HoverCard>
+                    <HoverCardTrigger>{matrixEntry?.value}</HoverCardTrigger>
+                    <HoverCardContent>
+                      {matrixEntry?.source && (
+                        <div className="text-xs">
+                          <span className="font-bold">Source:</span>{" "}
+                          {matrixEntry.source}
+                        </div>
+                      )}
+                    </HoverCardContent>
+                  </HoverCard>
                 </TableCell>
               ))}
             </TableRow>
