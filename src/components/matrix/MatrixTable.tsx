@@ -25,9 +25,9 @@ function MatrixTable({ variables, interactions }: IProps) {
     [variables, interactions],
   );
 
-  const getTailwindColor = (value: number | null) => {
+  const getTailwindColor = (value: number | null | undefined) => {
     value = Number(value);
-    if (value === null) {
+    if (value === null || value === undefined) {
       return;
     } else if (value === 1) {
       return "bg-red-100";
@@ -81,7 +81,7 @@ function MatrixTable({ variables, interactions }: IProps) {
               } else {
                 return (
                   <TableHead key={index} className="h-7 border text-center">
-                    {matrixEntry}
+                    {matrixEntry?.value}
                   </TableHead>
                 );
               }
@@ -106,9 +106,9 @@ function MatrixTable({ variables, interactions }: IProps) {
               {matrix[index + 1].map((matrixEntry, index) => (
                 <TableCell
                   key={index}
-                  className={`border py-1  text-center ${showColors && index > 0 && index < matrix.length - 1 && getTailwindColor(matrixEntry)}`}
+                  className={`border py-1  text-center ${showColors && index > 0 && index < matrix.length - 1 && getTailwindColor(matrixEntry?.value)}`}
                 >
-                  {matrixEntry}
+                  {matrixEntry?.value}
                 </TableCell>
               ))}
             </TableRow>
@@ -119,7 +119,7 @@ function MatrixTable({ variables, interactions }: IProps) {
             </TableCell>
             {matrix[matrix.length - 1].slice(1).map((matrixEntry, index) => (
               <TableCell key={index} className="border py-1 text-center">
-                {matrixEntry}
+                {matrixEntry?.value}
               </TableCell>
             ))}
           </TableRow>

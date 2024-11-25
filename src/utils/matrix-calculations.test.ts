@@ -72,7 +72,11 @@ test("Create matrix from variables and interactions", () => {
     },
   ];
 
-  expect(createMatrix(variables, interactions)).toStrictEqual([
+  const matrixValues = createMatrix(variables, interactions).map((row) =>
+    row.map((entry) => (entry ? entry.value : null)),
+  );
+
+  expect(matrixValues).toStrictEqual([
     [null, 45, 69, 17, null],
     [45, null, -1, 2, 3],
     [69, 1, null, null, 1],
