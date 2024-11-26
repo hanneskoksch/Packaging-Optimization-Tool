@@ -3,7 +3,7 @@ import { ICsvInteraction, ICsvVariable } from "@/types/csv-types";
 import { rowDataToInteractions, rowDataToVariables } from "@/utils/csv-parser";
 import { Upload, X } from "lucide-react";
 import { useState } from "react";
-import { useCSVReader } from "react-papaparse";
+import { useCSVReader, readString } from "react-papaparse";
 import { Button } from "../ui/button";
 
 interface IProps {
@@ -16,6 +16,31 @@ export default function CSVUpload({ setVariables, setInteractions }: IProps) {
 
   const [zoneHoverVariables, setZoneHoverVariables] = useState(false);
   const [zoneHoverInteractions, setZoneHoverInteractions] = useState(false);
+
+  // Automatically load CSV files in development mode
+  if (import.meta.env.MODE === "development") {
+    fetch("/Variablen.csv")
+      .then((response) => response.text())
+      .then((text) => {
+        readString(text, {
+          worker: true,
+          complete: (results) => {
+            setVariables(rowDataToVariables(results.data));
+          },
+        });
+      });
+
+    fetch("/Wechselwirkungen.csv")
+      .then((response) => response.text())
+      .then((text) => {
+        readString(text, {
+          worker: true,
+          complete: (results) => {
+            setInteractions(rowDataToInteractions(results.data));
+          },
+        });
+      });
+  }
 
   return (
     <div className="space-y-6 max-w-2xl">
