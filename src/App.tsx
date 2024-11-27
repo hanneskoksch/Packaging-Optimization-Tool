@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
 import Upload from "./components/upload/Upload";
 import { ICsvInteraction, ICsvVariable } from "./types/csv-types";
 import { getVariablesImpacts } from "./utils/matrix-calculations";
+import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
 
 export function App() {
   const [variables, setVariables] = useState<null | ICsvVariable[]>(null);
@@ -49,11 +50,18 @@ export function App() {
         </TabsContent>
         <TabsContent value="diagram">
           {variablesImpacts ? (
-            <DivergingBarChart
-              variables={variablesImpacts.map((x) => x.variable)}
-              activeSums={variablesImpacts?.map((x) => x.activeSum) ?? []}
-              passiveSums={variablesImpacts?.map((x) => x.passiveSum) ?? []}
-            />
+            <Card className="w-[800px] mt-8">
+              <CardHeader>
+                <CardTitle>Diverging bar chart</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <DivergingBarChart
+                  variables={variablesImpacts.map((x) => x.variable)}
+                  activeSums={variablesImpacts?.map((x) => x.activeSum) ?? []}
+                  passiveSums={variablesImpacts?.map((x) => x.passiveSum) ?? []}
+                />
+              </CardContent>
+            </Card>
           ) : (
             <div>Upload a CSV file first.</div>
           )}
