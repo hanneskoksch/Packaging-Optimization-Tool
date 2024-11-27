@@ -62,3 +62,26 @@ export function createMatrix(
 
   return matrix;
 }
+
+export function getVariablesImpacts(
+  variables: ICsvVariable[],
+  interactions: ICsvInteraction[],
+): { variable: ICsvVariable; activeSum: number; passiveSum: number }[] {
+  return variables.map((variable) => {
+    const activeSum = interactions
+      .filter((interaction) => interaction.variableId === variable.id)
+      .reduce<number>(
+        (sum, interaction) => sum + Math.abs(interaction.valueSelfDefined),
+        0,
+      );
+
+    const passiveSum = interactions
+      .filter((interaction) => interaction.impactVariableId === variable.id)
+      .reduce<number>(
+        (sum, interaction) => sum + Math.abs(interaction.valueSelfDefined),
+        0,
+      );
+
+    return { variable, activeSum, passiveSum };
+  });
+}
