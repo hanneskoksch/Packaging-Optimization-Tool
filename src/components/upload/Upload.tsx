@@ -42,7 +42,7 @@ export default function CSVUpload({ setVariables, setInteractions }: IProps) {
           });
         });
     }
-  });
+  }, [setVariables, setInteractions]);
 
   return (
     <div className="space-y-6 max-w-2xl">
