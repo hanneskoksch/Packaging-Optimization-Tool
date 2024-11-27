@@ -4,6 +4,7 @@ import MatrixTable from "./components/matrix/MatrixTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
 import Upload from "./components/upload/Upload";
 import { ICsvInteraction, ICsvVariable } from "./types/csv-types";
+import SimpleBarChart from "./components/matrix/AnalysisBarChart";
 
 export function App() {
   const [variables, setVariables] = useState<null | ICsvVariable[]>(null);
@@ -14,10 +15,11 @@ export function App() {
   return (
     <div className="m-4">
       <Tabs defaultValue="upload">
-        <TabsList className="grid grid-cols-3 w-[600px]">
+        <TabsList className="grid grid-cols-4 w-[600px]">
           <TabsTrigger value="upload">1. Upload CSV</TabsTrigger>
           <TabsTrigger value="check">2. Check data</TabsTrigger>
           <TabsTrigger value="matrix">3. Matrix</TabsTrigger>
+          <TabsTrigger value="diagram">4. Diagram</TabsTrigger>
         </TabsList>
         <TabsContent value="upload">
           <Upload
@@ -38,6 +40,9 @@ export function App() {
           ) : (
             <div>Upload a CSV file first.</div>
           )}
+        </TabsContent>
+        <TabsContent value="diagram">
+          <SimpleBarChart />
         </TabsContent>
       </Tabs>
     </div>
