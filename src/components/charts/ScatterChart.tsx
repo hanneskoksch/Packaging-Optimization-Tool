@@ -1,17 +1,14 @@
-import { ICsvVariable } from "@/types/csv-types";
-import Chart from "chart.js/auto";
-
+import { IVariablesImpact } from "@/utils/matrix-calculations";
+import Chart, { ChartOptions } from "chart.js/auto";
 import { useEffect, useRef } from "react";
+import { backgroundImageArePlugin } from "./ScatterChartPlugins";
 
 interface IProps {
-  variablesImpacts: {
-    variable: ICsvVariable;
-    activeSum: number;
-    passiveSum: number;
-  }[];
+  showImpactAreas: boolean;
+  variablesImpacts: IVariablesImpact[];
 }
 
-const ScatterChart = ({ variablesImpacts }: IProps) => {
+const ScatterChart = ({ showImpactAreas, variablesImpacts }: IProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -32,58 +29,68 @@ const ScatterChart = ({ variablesImpacts }: IProps) => {
       })),
     };
 
-    const myChart = new Chart(ctx!, {
-      type: "scatter",
-      data: data,
-      options: {
-        responsive: true,
-        maintainAspectRatio: true,
-        aspectRatio: 1,
-        scales: {
-          x: {
-            type: "linear",
-            position: "bottom",
-            title: {
-              display: true,
-              text: "Being impacted (passive)",
-            },
-            max: maxValue + 1,
-            ticks: {
-              stepSize: 1,
-            },
+    const options: ChartOptions = {
+      responsive: true,
+      maintainAspectRatio: true,
+      aspectRatio: 1,
+      animation: false,
+      scales: {
+        x: {
+          type: "linear",
+          position: "bottom",
+          title: {
+            display: true,
+            text: "Being impacted (passive)",
           },
-          y: {
-            type: "linear",
-            position: "left",
-            title: {
-              display: true,
-              text: "Impacting others (active)",
-            },
-            max: maxValue + 1,
-            ticks: {
-              stepSize: 1,
-            },
+          max: maxValue + 1,
+          ticks: {
+            stepSize: 1,
+          },
+          grid: {
+            display: !showImpactAreas,
           },
         },
-        plugins: {
-          legend: {
-            display: false,
+        y: {
+          type: "linear",
+          position: "left",
+          title: {
+            display: true,
+            text: "Impacting others (active)",
           },
-        },
-        elements: {
-          point: {
-            radius: 8,
-            hoverRadius: 12,
+          max: maxValue + 1,
+          ticks: {
+            stepSize: 1,
+          },
+          grid: {
+            display: !showImpactAreas,
           },
         },
       },
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+      elements: {
+        point: {
+          radius: 6,
+          hoverRadius: 8,
+        },
+      },
+    };
+
+    const myChart = new Chart(ctx!, {
+      type: "scatter",
+      data: data,
+      options: options,
+      plugins: showImpactAreas ? [backgroundImageArePlugin] : [],
     });
 
     // Cleanup function to destroy chart instance
     return () => {
       myChart.destroy();
     };
-  }, [variablesImpacts]);
+  }, [variablesImpacts, showImpactAreas]);
 
   return (
     <div className="max-w-[800px] max-h-[400px]">

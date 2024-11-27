@@ -1,13 +1,13 @@
 import { useMemo, useState } from "react";
-import CheckData from "./components/check-data/CheckData";
 import DivergingBarChart from "./components/charts/DivergingBarChart";
+import ScatterChartCard from "./components/charts/ScatterChartCard";
+import CheckData from "./components/check-data/CheckData";
 import MatrixTable from "./components/matrix/MatrixTable";
+import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
 import Upload from "./components/upload/Upload";
 import { ICsvInteraction, ICsvVariable } from "./types/csv-types";
 import { getVariablesImpacts } from "./utils/matrix-calculations";
-import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
-import ScatterChart from "./components/charts/ScatterChart";
 
 export function App() {
   const [variables, setVariables] = useState<null | ICsvVariable[]>(null);
@@ -66,15 +66,7 @@ export function App() {
                   />
                 </CardContent>
               </Card>
-
-              <Card className="size-fit">
-                <CardHeader>
-                  <CardTitle>Scatter chart</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ScatterChart variablesImpacts={variablesImpacts} />
-                </CardContent>
-              </Card>
+              <ScatterChartCard variablesImpacts={variablesImpacts} />
             </div>
           ) : (
             <div>Upload a CSV file first.</div>

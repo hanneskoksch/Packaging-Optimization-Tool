@@ -63,10 +63,16 @@ export function createMatrix(
   return matrix;
 }
 
+export interface IVariablesImpact {
+  variable: ICsvVariable;
+  activeSum: number;
+  passiveSum: number;
+}
+
 export function getVariablesImpacts(
   variables: ICsvVariable[],
   interactions: ICsvInteraction[],
-): { variable: ICsvVariable; activeSum: number; passiveSum: number }[] {
+): IVariablesImpact[] {
   return variables.map((variable) => {
     const activeSum = interactions
       .filter((interaction) => interaction.variableId === variable.id)
