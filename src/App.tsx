@@ -1,16 +1,22 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import CheckData from "./components/check-data/CheckData";
+import DivergingBarChart from "./components/matrix/DivergingBarChart";
 import MatrixTable from "./components/matrix/MatrixTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
 import Upload from "./components/upload/Upload";
 import { ICsvInteraction, ICsvVariable } from "./types/csv-types";
-import SimpleBarChart from "./components/matrix/AnalysisBarChart";
+import { getVariablesImpacts } from "./utils/matrix-calculations";
 
 export function App() {
   const [variables, setVariables] = useState<null | ICsvVariable[]>(null);
   const [interactions, setInteractions] = useState<null | ICsvInteraction[]>(
     null,
   );
+
+  const variablesImpacts = useMemo(() => {
+    if (!variables || !interactions) return;
+    return getVariablesImpacts(variables, interactions);
+  }, [variables, interactions]);
 
   return (
     <div className="m-4">
@@ -42,7 +48,15 @@ export function App() {
           )}
         </TabsContent>
         <TabsContent value="diagram">
-          <SimpleBarChart />
+          {variablesImpacts ? (
+            <DivergingBarChart
+              variables={variablesImpacts.map((x) => x.variable)}
+              activeSums={variablesImpacts?.map((x) => x.activeSum) ?? []}
+              passiveSums={variablesImpacts?.map((x) => x.passiveSum) ?? []}
+            />
+          ) : (
+            <div>Upload a CSV file first.</div>
+          )}
         </TabsContent>
       </Tabs>
     </div>

@@ -8,6 +8,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { ICsvVariable } from "@/types/csv-types";
 
 Chart.register(
   BarController,
@@ -18,7 +19,13 @@ Chart.register(
   Legend,
 );
 
-const DivergingBarChart = () => {
+interface IProps {
+  variables: ICsvVariable[];
+  passiveSums: number[];
+  activeSums: number[];
+}
+
+const DivergingBarChart = ({ variables, passiveSums, activeSums }: IProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -27,17 +34,17 @@ const DivergingBarChart = () => {
     const ctx = canvasRef.current.getContext("2d");
 
     const data = {
-      labels: ["Banana", "Orange", "Grape", "Peach", "Plum", "Apple"],
+      labels: variables.map((variable) => variable.variable),
       datasets: [
         {
-          label: "Store A",
-          data: [-11.8, -50.2, -51.7, -56.9, -74, -81], // Negative values for left
-          backgroundColor: "rgba(75, 192, 192, 0.8)",
+          label: "Being impacted (passive)", // Passive sum
+          data: passiveSums.map((sum) => -sum), // Negative values for left
+          backgroundColor: "#9B2524",
         },
         {
-          label: "Store B",
-          data: [89.2, 49.8, 48.3, 43.1, 26, 19], // Positive values for right
-          backgroundColor: "rgba(255, 99, 132, 0.8)",
+          label: "Impacting (active)", // Active sum
+          data: activeSums, // Positive values for right
+          backgroundColor: "#0070C0",
         },
       ],
     };
@@ -56,16 +63,17 @@ const DivergingBarChart = () => {
             callbacks: {
               label: (tooltipItem) => {
                 const value = Number(tooltipItem.raw);
-                return `${tooltipItem.dataset.label}: ${Math.abs(value)}%`; // Show only absolute values
+                return `${tooltipItem.dataset.label}: ${Math.abs(value)}`; // Show only absolute values
               },
             },
           },
         },
         scales: {
           x: {
+            display: false, // No x-axis
             beginAtZero: true,
             ticks: {
-              callback: (value) => `${Math.abs(Number(value))}%`, // Show only absolute values
+              callback: (value) => `${Math.abs(Number(value))}`, // Show only absolute values
             },
           },
           y: {
@@ -79,9 +87,14 @@ const DivergingBarChart = () => {
     return () => {
       myChart.destroy();
     };
-  }, []);
+  }, [variables, passiveSums, activeSums]);
 
-  return <canvas ref={canvasRef}></canvas>;
+  const diagramHeight = variables.length * 50;
+  return (
+    <div className={`relative h-[${diagramHeight}px] max-w-[800px]`}>
+      <canvas ref={canvasRef}></canvas>
+    </div>
+  );
 };
 
 export default DivergingBarChart;
