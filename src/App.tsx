@@ -7,6 +7,7 @@ import Upload from "./components/upload/Upload";
 import { ICsvInteraction, ICsvVariable } from "./types/csv-types";
 import { getVariablesImpacts } from "./utils/matrix-calculations";
 import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
+import ScatterChart from "./components/charts/ScatterChart";
 
 export function App() {
   const [variables, setVariables] = useState<null | ICsvVariable[]>(null);
@@ -26,7 +27,7 @@ export function App() {
           <TabsTrigger value="upload">1. Upload CSV</TabsTrigger>
           <TabsTrigger value="check">2. Check data</TabsTrigger>
           <TabsTrigger value="matrix">3. Matrix</TabsTrigger>
-          <TabsTrigger value="diagram">4. Diagram</TabsTrigger>
+          <TabsTrigger value="diagrams">4. Diagrams</TabsTrigger>
         </TabsList>
         <TabsContent value="upload">
           <Upload
@@ -48,20 +49,33 @@ export function App() {
             <div>Upload a CSV file first.</div>
           )}
         </TabsContent>
-        <TabsContent value="diagram">
+        <TabsContent value="diagrams">
           {variablesImpacts ? (
-            <Card className="w-[800px] mt-8">
-              <CardHeader>
-                <CardTitle>Diverging bar chart</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <DivergingBarChart
-                  variables={variablesImpacts.map((x) => x.variable)}
-                  activeSums={variablesImpacts?.map((x) => x.activeSum) ?? []}
-                  passiveSums={variablesImpacts?.map((x) => x.passiveSum) ?? []}
-                />
-              </CardContent>
-            </Card>
+            <div className="flex space-x-3 mt-8">
+              <Card className="w-[800px]">
+                <CardHeader>
+                  <CardTitle>Diverging bar chart</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <DivergingBarChart
+                    variables={variablesImpacts.map((x) => x.variable)}
+                    activeSums={variablesImpacts?.map((x) => x.activeSum) ?? []}
+                    passiveSums={
+                      variablesImpacts?.map((x) => x.passiveSum) ?? []
+                    }
+                  />
+                </CardContent>
+              </Card>
+
+              <Card className="size-fit">
+                <CardHeader>
+                  <CardTitle>Scatter chart</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ScatterChart variablesImpacts={variablesImpacts} />
+                </CardContent>
+              </Card>
+            </div>
           ) : (
             <div>Upload a CSV file first.</div>
           )}
