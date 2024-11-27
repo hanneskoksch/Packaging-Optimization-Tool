@@ -1,71 +1,75 @@
+import { useEffect, useRef } from "react";
 import {
+  Chart,
   BarController,
   BarElement,
   CategoryScale,
-  Chart,
-  Legend,
   LinearScale,
-  Title,
+  Tooltip,
+  Legend,
 } from "chart.js";
-import { useEffect, useRef } from "react";
 
 Chart.register(
   BarController,
   BarElement,
   CategoryScale,
   LinearScale,
-  Title,
+  Tooltip,
   Legend,
 );
 
-const SimpleBarChart = () => {
-  const chartRef = useRef<HTMLCanvasElement>(null);
+const DivergingBarChart = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    if (!chartRef.current) return;
+    if (!canvasRef.current) return;
 
-    const ctx: CanvasRenderingContext2D = chartRef.current.getContext("2d")!;
+    const ctx = canvasRef.current.getContext("2d");
 
-    const myChart = new Chart(ctx, {
+    const data = {
+      labels: ["Banana", "Orange", "Grape", "Peach", "Plum", "Apple"],
+      datasets: [
+        {
+          label: "Store A",
+          data: [-11.8, -50.2, -51.7, -56.9, -74, -81], // Negative values for left
+          backgroundColor: "rgba(75, 192, 192, 0.8)",
+        },
+        {
+          label: "Store B",
+          data: [89.2, 49.8, 48.3, 43.1, 26, 19], // Positive values for right
+          backgroundColor: "rgba(255, 99, 132, 0.8)",
+        },
+      ],
+    };
+
+    const myChart = new Chart(ctx!, {
       type: "bar",
-      data: {
-        labels: ["January", "February", "March", "April", "May"],
-        datasets: [
-          {
-            label: "Sales",
-            data: [12, 19, 3, 5, 2],
-            backgroundColor: [
-              "rgba(75, 192, 192, 0.2)",
-              "rgba(255, 99, 132, 0.2)",
-              "rgba(255, 206, 86, 0.2)",
-              "rgba(54, 162, 235, 0.2)",
-              "rgba(153, 102, 255, 0.2)",
-            ],
-            borderColor: [
-              "rgba(75, 192, 192, 1)",
-              "rgba(255, 99, 132, 1)",
-              "rgba(255, 206, 86, 1)",
-              "rgba(54, 162, 235, 1)",
-              "rgba(153, 102, 255, 1)",
-            ],
-            borderWidth: 1,
-          },
-        ],
-      },
+      data: data,
       options: {
+        indexAxis: "y", // Horizontal chart
         responsive: true,
         plugins: {
           legend: {
-            position: "top",
+            position: "bottom", // Legend below the chart
           },
-          title: {
-            display: true,
-            text: "Monthly Sales Data",
+          tooltip: {
+            callbacks: {
+              label: (tooltipItem) => {
+                const value = Number(tooltipItem.raw);
+                return `${tooltipItem.dataset.label}: ${Math.abs(value)}%`; // Show only absolute values
+              },
+            },
           },
         },
         scales: {
-          y: {
+          x: {
             beginAtZero: true,
+            ticks: {
+              callback: (value) => `${Math.abs(Number(value))}%`, // Show only absolute values
+            },
+          },
+          y: {
+            stacked: true, // Bars of the same group on same height
           },
         },
       },
@@ -77,7 +81,7 @@ const SimpleBarChart = () => {
     };
   }, []);
 
-  return <canvas ref={chartRef}></canvas>;
+  return <canvas ref={canvasRef}></canvas>;
 };
 
-export default SimpleBarChart;
+export default DivergingBarChart;
