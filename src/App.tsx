@@ -1,9 +1,8 @@
 import { useMemo, useState } from "react";
-import DivergingBarChart from "./components/charts/DivergingBarChart";
+import DivergingBarChartCard from "./components/charts/DivergingBarChartCard";
 import ScatterChartCard from "./components/charts/ScatterChartCard";
 import CheckData from "./components/check-data/CheckData";
 import MatrixTable from "./components/matrix/MatrixTable";
-import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
 import Upload from "./components/upload/Upload";
 import { ICsvInteraction, ICsvVariable } from "./types/csv-types";
@@ -52,20 +51,7 @@ export function App() {
         <TabsContent value="diagrams">
           {variablesImpacts ? (
             <div className="flex space-x-3 mt-8">
-              <Card className="w-[800px]">
-                <CardHeader>
-                  <CardTitle>Diverging bar chart</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <DivergingBarChart
-                    variables={variablesImpacts.map((x) => x.variable)}
-                    activeSums={variablesImpacts?.map((x) => x.activeSum) ?? []}
-                    passiveSums={
-                      variablesImpacts?.map((x) => x.passiveSum) ?? []
-                    }
-                  />
-                </CardContent>
-              </Card>
+              <DivergingBarChartCard variablesImpacts={variablesImpacts} />
               <ScatterChartCard variablesImpacts={variablesImpacts} />
             </div>
           ) : (
