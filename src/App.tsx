@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import CheckData from "./components/check-data/CheckData";
-import DivergingBarChart from "./components/matrix/DivergingBarChart";
+import DivergingBarChart from "./components/charts/DivergingBarChart";
 import MatrixTable from "./components/matrix/MatrixTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
 import Upload from "./components/upload/Upload";
