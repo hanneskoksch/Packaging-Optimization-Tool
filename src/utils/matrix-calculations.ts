@@ -1,17 +1,20 @@
 import { ICsvInteraction, ICsvVariable } from "@/types/csv-types";
 
+interface IMatrixEntry {
+  value: number;
+  source?: string;
+}
+
 export function createMatrix(
   variables: ICsvVariable[],
   interactions: ICsvInteraction[],
-): ({ value: number; source?: string } | null)[][] {
+): (IMatrixEntry | null)[][] {
   // Extract variable IDs
   const variableIds = variables.map((variable) => variable.id);
 
   // Initialize the matrix with dimensions (n + 2) x (n + 2)
   // +2 for the extra row and column for the sums
-  const matrix: ({ value: number; source?: string } | null)[][] = Array(
-    variableIds.length + 2,
-  )
+  const matrix: (IMatrixEntry | null)[][] = Array(variableIds.length + 2)
     .fill(null)
     .map(() => Array(variableIds.length + 2).fill(null));
 
