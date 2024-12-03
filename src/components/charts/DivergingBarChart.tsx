@@ -23,12 +23,53 @@ interface IProps {
   variables: ICsvVariable[];
   passiveSums: number[];
   activeSums: number[];
+  showData: "all" | "rocket" | "hourglass";
+  highlightThreshold: number;
 }
 
-const DivergingBarChart = ({ variables, passiveSums, activeSums }: IProps) => {
+const DivergingBarChart = ({
+  variables,
+  passiveSums,
+  activeSums,
+  showData,
+  highlightThreshold,
+}: IProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  const PASSIVE_COLOR = "#9B2524";
+  const PASSIVE_COLOR_FADED = "#EDD4D3";
+  const ACTIVE_COLOR = "#0070C0";
+  const ACTIVE_COLOR_FADED = "#D2E3F3";
+
   useEffect(() => {
+    const getPassiveColor = () => {
+      if (showData === "all") return PASSIVE_COLOR;
+      if (showData === "rocket") {
+        return activeSums.map((sum) => {
+          return sum > highlightThreshold ? PASSIVE_COLOR : PASSIVE_COLOR_FADED;
+        });
+      }
+      if (showData === "hourglass") {
+        return passiveSums.map((sum) => {
+          return sum > highlightThreshold ? PASSIVE_COLOR : PASSIVE_COLOR_FADED;
+        });
+      }
+    };
+
+    const getActiveColor = () => {
+      if (showData === "all") return ACTIVE_COLOR;
+      if (showData === "rocket") {
+        return activeSums.map((sum) => {
+          return sum > highlightThreshold ? ACTIVE_COLOR : ACTIVE_COLOR_FADED;
+        });
+      }
+      if (showData === "hourglass") {
+        return passiveSums.map((sum) => {
+          return sum > highlightThreshold ? ACTIVE_COLOR : ACTIVE_COLOR_FADED;
+        });
+      }
+    };
+
     if (!canvasRef.current) return;
 
     const ctx = canvasRef.current.getContext("2d");
@@ -39,12 +80,12 @@ const DivergingBarChart = ({ variables, passiveSums, activeSums }: IProps) => {
         {
           label: "Being impacted (passive)", // Passive sum
           data: passiveSums.map((sum) => -sum), // Negative values for left
-          backgroundColor: "#9B2524",
+          backgroundColor: getPassiveColor(),
         },
         {
           label: "Impacting (active)", // Active sum
           data: activeSums, // Positive values for right
-          backgroundColor: "#0070C0",
+          backgroundColor: getActiveColor(),
         },
       ],
     };
@@ -87,9 +128,10 @@ const DivergingBarChart = ({ variables, passiveSums, activeSums }: IProps) => {
     return () => {
       myChart.destroy();
     };
-  }, [variables, passiveSums, activeSums]);
+  }, [variables, passiveSums, activeSums, showData, highlightThreshold]);
 
   const diagramHeight = variables.length * 50;
+
   return (
     <div className={`relative h-[${diagramHeight}px] max-w-[800px]`}>
       <canvas ref={canvasRef}></canvas>
