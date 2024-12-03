@@ -94,6 +94,7 @@ const DivergingBarChart = ({
       type: "bar",
       data: data,
       options: {
+        animation: false,
         indexAxis: "y", // Horizontal chart
         responsive: true,
         plugins: {
