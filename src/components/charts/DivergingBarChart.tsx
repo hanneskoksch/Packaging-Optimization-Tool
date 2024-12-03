@@ -99,6 +99,24 @@ const DivergingBarChart = ({
         plugins: {
           legend: {
             position: "bottom", // Legend below the chart
+
+            labels: {
+              // Ensure legend labels always use the non-faded colors
+              generateLabels: (chart) => {
+                const datasetColors = [PASSIVE_COLOR, ACTIVE_COLOR];
+                return chart.data.datasets.map((dataset, i) => ({
+                  text: dataset.label ?? "",
+                  fillStyle: datasetColors[i], // Use non-faded colors for the legend
+                  hidden: !chart.isDatasetVisible(i),
+                  lineCap: "butt",
+                  lineDash: [],
+                  lineDashOffset: 0,
+                  lineJoin: "miter",
+                  strokeStyle: datasetColors[i],
+                  pointStyle: "rect",
+                }));
+              },
+            },
           },
           tooltip: {
             callbacks: {
