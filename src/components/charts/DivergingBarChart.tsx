@@ -23,7 +23,7 @@ interface IProps {
   variables: ICsvVariable[];
   passiveSums: number[];
   activeSums: number[];
-  showData: "all" | "rocket" | "hourglass";
+  showData: "all" | "rocket" | "hourglass" | "lightning";
   highlightThreshold: number;
 }
 
@@ -54,6 +54,14 @@ const DivergingBarChart = ({
           return sum > highlightThreshold ? PASSIVE_COLOR : PASSIVE_COLOR_FADED;
         });
       }
+      if (showData === "lightning") {
+        return activeSums.map((sum, index) => {
+          return sum > highlightThreshold &&
+            passiveSums[index] > highlightThreshold
+            ? PASSIVE_COLOR
+            : PASSIVE_COLOR_FADED;
+        });
+      }
     };
 
     const getActiveColor = () => {
@@ -66,6 +74,14 @@ const DivergingBarChart = ({
       if (showData === "hourglass") {
         return passiveSums.map((sum) => {
           return sum > highlightThreshold ? ACTIVE_COLOR : ACTIVE_COLOR_FADED;
+        });
+      }
+      if (showData === "lightning") {
+        return activeSums.map((sum, index) => {
+          return sum > highlightThreshold &&
+            passiveSums[index] > highlightThreshold
+            ? ACTIVE_COLOR
+            : ACTIVE_COLOR_FADED;
         });
       }
     };
