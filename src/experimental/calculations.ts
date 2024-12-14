@@ -12,6 +12,10 @@ function interpretValue(value: number): number {
   return baseValue + value * step;
 }
 
+function preciseMultiply(a: number, b: number) {
+  return Math.round(a * b * 100) / 100; // Runden auf zwei Dezimalstellen
+}
+
 // Calculate the new matrix
 export const calculateNewMatrix = (
   matrix: IMatrix,
@@ -30,7 +34,7 @@ export const calculateNewMatrix = (
       // Does not change the effect on itself
       if (value === null) return null;
 
-      return value * rowMultiplier;
+      return preciseMultiply(value, rowMultiplier);
     });
   });
   return newMatrix;

@@ -2,6 +2,9 @@
 export default {
   darkMode: ["class"],
   content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
+  safelist: [
+    { pattern: /bg-(green|red)-(100|200|300|400|500|600|700|800|900)/ },
+  ],
   theme: {
     extend: {
       borderRadius: {

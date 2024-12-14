@@ -23,7 +23,7 @@ export function App() {
 
   return (
     <div className="m-4">
-      <Tabs defaultValue="upload">
+      <Tabs defaultValue="experimental">
         <TabsList className="grid grid-cols-5 w-[800px]">
           <TabsTrigger value="upload">1. Upload CSV</TabsTrigger>
           <TabsTrigger value="check">2. Check data</TabsTrigger>

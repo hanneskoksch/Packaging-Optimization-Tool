@@ -19,7 +19,6 @@ function ExperimentalPage() {
   const [newMatrix, setnewMatrix] = useState<IMatrix | null>(null);
 
   const onVariableSelected = (variableIndex: number) => {
-    console.log("first");
     setnewMatrix(calculateNewMatrix(sampleMatrix, variableIndex));
   };
 
@@ -67,6 +66,7 @@ function ExperimentalPage() {
             </div>
           </div>
           <Matrix
+            originalMatrix={sampleMatrix}
             matrix={newMatrix}
             variables={["V1", "V2", "V3"]}
             name="Neue Matrix"

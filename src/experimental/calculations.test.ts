@@ -40,13 +40,21 @@ test("New Matrix calculations", () => {
       return row.map((value) => {
         // Does not change the effect on itself
         if (value === null) return null;
-
-        return value * rowMultiplier;
+        console.log(
+          value,
+          rowMultiplier,
+          preciseMultiply(value, rowMultiplier),
+        );
+        return preciseMultiply(value, rowMultiplier);
       });
     });
     console.log(newMatrix);
     return calculateNewMatrix(newMatrix, depth - 1);
   };
 
-  console.log(calculateNewMatrix(testMatrix, 2));
+  console.log(calculateNewMatrix(testMatrix, 1));
 });
+
+function preciseMultiply(a: number, b: number) {
+  return Math.round(a * b * 100) / 100; // Runden auf zwei Dezimalstellen
+}

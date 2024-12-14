@@ -8,15 +8,23 @@ import {
 } from "@/components/ui/table";
 import { Plus } from "lucide-react";
 import { IMatrix } from "./calculations";
+import { getTailwindBgClass } from "./matrix-colors";
 
 interface IProps {
+  originalMatrix?: IMatrix;
   matrix: IMatrix;
   variables: string[];
   name?: string;
   onVariableSelected?: (variableIndex: number) => void;
 }
 
-function Matrix({ matrix, variables, name, onVariableSelected }: IProps) {
+function Matrix({
+  originalMatrix,
+  matrix,
+  variables,
+  name,
+  onVariableSelected,
+}: IProps) {
   const roundIfDouble = (value: number | null) => {
     if (value === null) return value;
     // Überprüfen, ob es sich um eine Ganzzahl handelt
@@ -25,6 +33,20 @@ function Matrix({ matrix, variables, name, onVariableSelected }: IProps) {
     }
     // Runde auf zwei Nachkommastellen
     return Number(value.toFixed(2));
+  };
+
+  const getColor = ([rowIndex, colIndex]: [number, number]) => {
+    if (originalMatrix === undefined) return "";
+    const originalValue = originalMatrix[rowIndex][colIndex];
+    const newValue = matrix[rowIndex][colIndex];
+    if (originalValue === null || newValue === null) return "";
+
+    const scaledNewValue = Math.round(newValue * 100);
+    const scaledOriginalValue = Math.round(originalValue * 100);
+    const difference = (scaledNewValue - scaledOriginalValue) / 100;
+
+    console.log(difference, getTailwindBgClass(difference));
+    return getTailwindBgClass(difference);
   };
 
   return (
@@ -68,10 +90,12 @@ function Matrix({ matrix, variables, name, onVariableSelected }: IProps) {
               </TableCell>
               {row.map((value, colIndex) => (
                 <TableCell
-                  className={`w-10 h-10 border ${value === null && "bg-gray-200"}`}
+                  className={`w-10 h-10 border ${value === null ? "bg-gray-200" : getColor([rowIndex, colIndex])}`}
                   key={colIndex}
                 >
-                  {roundIfDouble(value)}
+                  <div className="[text-shadow:-1px_-1px_0_#fff,_1px_-1px_0_#fff,_-1px_1px_0_#fff,_1px_1px_0_#fff]">
+                    {roundIfDouble(value)}
+                  </div>
                 </TableCell>
               ))}
             </TableRow>
