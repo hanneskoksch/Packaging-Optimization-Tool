@@ -1,43 +1,32 @@
 import { test } from "vitest";
-
-type Matrix = (number | null)[][];
+import { IMatrix } from "./calculations";
 
 test("New Matrix calculations", () => {
   // A small example matrix
-  const testMatrix: Matrix = [
+  const testMatrix: IMatrix = [
     [null, 2, 3],
     [0, null, 2],
     [3, -1, null],
   ];
 
-  // Interprets the values {-3, -2, -1, 0, 1, 2, 3} as 10% values
-  const valueInterpretationsHard: Record<number, number> = {
-    [-3]: 0.7,
-    [-2]: 0.8,
-    [-1]: 0.9,
-    [0]: 1,
-    [1]: 1.1,
-    [2]: 1.2,
-    [3]: 1.3,
-  };
+  /**
+   * Interprets a given value as a percentage adjustment with support for decimals.
+   * The values are derived directly based on a formula.
+   */
+  function interpretValue(value: number): number {
+    const baseValue = 1; // The baseline value for "0"
+    const step = 0.1; // Step size for each unit (e.g., -3 maps to 0.7, +3 maps to 1.3)
+    // const step = 0.01; // Step size for each unit (e.g., -3 maps to 0.97, +3 maps to 1.03)
 
-  // Interprets the values {-3, -2, -1, 0, 1, 2, 3} as % values
-  const valueInterpretationsSoft: Record<number, number> = {
-    [-3]: 0.97,
-    [-2]: 0.98,
-    [-1]: 0.99,
-    [0]: 1,
-    [1]: 1.01,
-    [2]: 1.02,
-    [3]: 1.03,
-  };
+    return baseValue + value * step;
+  }
 
   // The variable row we want to raise
   const rowToRaise = 0;
   const impactRow = testMatrix[rowToRaise];
 
   // Calculate the new matrix
-  const calculateNewMatrix = (matrix: Matrix, depth: number) => {
+  const calculateNewMatrix = (matrix: IMatrix, depth: number) => {
     if (depth === 0) return matrix;
 
     const newMatrix = matrix.map((row, rowIndex) => {
@@ -46,7 +35,7 @@ test("New Matrix calculations", () => {
 
       const rowValue = impactRow[rowIndex];
       // Tread null as 0 that has no effect
-      const rowMultiplier = valueInterpretationsHard[rowValue ?? 0];
+      const rowMultiplier = interpretValue(rowValue ?? 0);
 
       return row.map((value) => {
         // Does not change the effect on itself
