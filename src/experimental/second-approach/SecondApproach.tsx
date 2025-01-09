@@ -20,14 +20,19 @@ function SecondApproach() {
 
   const variableNames = ["V1", "V2", "V3"];
 
-  const [roundsToCalculate, setRoundsToCalculate] = useState<number>(0);
+  const [roundsToCalculate, setRoundsToCalculate] = useState<number>(5);
 
   const [calculatedVectors, setCalculatedVectors] = useState<number[][] | null>(
     null,
   );
 
-  const calculateVectors = () => {
-    const newVectors = [initialVector];
+  const calculateVectors = (index: number) => {
+    // set initial vector at index to 0.1
+    const newVector = [...initialVectorReset];
+    newVector[index] = 0.1;
+    setInitialVector(newVector);
+
+    const newVectors = [newVector];
     for (let i = 0; i < roundsToCalculate; i++) {
       const latestVector = newVectors[newVectors.length - 1];
       const newVector = multiplyVectorMatrix(latestVector, sampleMatrix);
@@ -49,11 +54,7 @@ function SecondApproach() {
           variables={variableNames}
           values={initialVector}
           onVariableSelected={(index: number) => {
-            // set initial vector at index to 0.1
-            const newVector = [...initialVectorReset];
-            newVector[index] = 0.1;
-            setInitialVector(newVector);
-            calculateVectors();
+            calculateVectors(index);
           }}
         />
         <div className="w-full max-w-sm space-y-2">
@@ -67,15 +68,17 @@ function SecondApproach() {
           />
         </div>
 
-        <MoveRight className="size-16" />
         {calculatedVectors !== null && (
-          <div>
-            <VectorProgression vectors={calculatedVectors} />
-            <MatrixHeatMapDiagramm
-              vectors={calculatedVectors}
-              variables={variableNames}
-            />
-          </div>
+          <>
+            <MoveRight className="size-28" />
+            <div className="space-y-8">
+              <VectorProgression vectors={calculatedVectors} />
+              <MatrixHeatMapDiagramm
+                vectors={calculatedVectors}
+                variables={variableNames}
+              />
+            </div>
+          </>
         )}
       </div>
     </div>

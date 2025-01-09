@@ -4,7 +4,7 @@ import SecondApproach from "./second-approach/SecondApproach";
 function ExperimentalPage() {
   return (
     <>
-      <div className="m-10 border p-10">
+      <div className="m-10 p-10">
         <h2 className="font-semibold">Second approach</h2>
         <SecondApproach />
       </div>

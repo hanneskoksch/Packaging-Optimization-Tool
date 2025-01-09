@@ -6,7 +6,7 @@ interface IProps {
 
 function VectorProgression({ vectors }: IProps) {
   return (
-    <div className="flex space-x-8 items-top">
+    <div className="flex space-x-1 items-top">
       {vectors.map((vector, index) => (
         <Vector
           key={index}
