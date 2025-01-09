@@ -19,29 +19,25 @@ interface IProps {
 function Vector({ name, variables, values, onVariableSelected }: IProps) {
   return (
     <div>
-      <Table className="max-w-10 border table-fixed text-center">
+      <Table className="border table-auto text-center">
         <TableCaption>{name}</TableCaption>
         <TableBody>
           {variables.map((variable, index) => (
             <TableRow key={index}>
-              <TableCell className="w-10 h-10 border font-bold">
+              <TableCell className="border font-bold">
                 {variable}
               </TableCell>
-              <TableCell className="w-10 h-10 border">
+              <TableCell className="border">
                 {values[index]}
               </TableCell>
               {onVariableSelected && (
-                <TableCell className="w-10 h-10 border">
+                <TableCell className="border">
                   <Button
                     variant="outline"
                     size="icon"
                     className="h-4 w-4 shrink-0 rounded-full"
                     onClick={() => {
-                      if (
-                        onVariableSelected === null ||
-                        onVariableSelected === undefined
-                      )
-                        return;
+                      if (!onVariableSelected) return;
                       onVariableSelected(index);
                     }}
                   >
