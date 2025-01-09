@@ -1,5 +1,5 @@
 import { test } from "vitest";
-import { IMatrix } from "../calculations";
+import { IMatrix } from "./calculations";
 
 test("New Matrix calculations", () => {
   // A small example matrix
