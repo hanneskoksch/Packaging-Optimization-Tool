@@ -24,12 +24,8 @@ function Vector({ name, variables, values, onVariableSelected }: IProps) {
         <TableBody>
           {variables.map((variable, index) => (
             <TableRow key={index}>
-              <TableCell className="border font-bold">
-                {variable}
-              </TableCell>
-              <TableCell className="border">
-                {values[index]}
-              </TableCell>
+              <TableCell className="border font-bold">{variable}</TableCell>
+              <TableCell className="border">{values[index]}</TableCell>
               {onVariableSelected && (
                 <TableCell className="border">
                   <Button

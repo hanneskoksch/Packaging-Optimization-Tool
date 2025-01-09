@@ -53,7 +53,6 @@ function MatrixHeatMapDiagramm({ vectors, variables }: IProps) {
     },
     series: [
       {
-        name: "Punch Card",
         type: "heatmap",
         data: data,
         label: {

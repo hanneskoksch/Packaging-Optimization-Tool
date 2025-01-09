@@ -45,7 +45,7 @@ function Matrix({
     const scaledOriginalValue = Math.round(originalValue * 100);
     const difference = (scaledNewValue - scaledOriginalValue) / 100;
 
-    console.log(difference, getTailwindBgClass(difference));
+    //console.log(difference, getTailwindBgClass(difference));
     return getTailwindBgClass(difference);
   };
 

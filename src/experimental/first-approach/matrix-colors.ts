@@ -5,7 +5,7 @@
  */
 export function getTailwindBgClass(value: number): string {
   if (value < -0.9 || value > 0.9) {
-    throw new Error("Value must be between -0.9 and 0.9. Value is: " + value,);
+    throw new Error("Value must be between -0.9 and 0.9. Value is: " + value);
   }
 
   // Skalieren: Zahl in den Bereich 1 bis 5 umwandeln
