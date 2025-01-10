@@ -9,11 +9,11 @@ import { multiplyVectorMatrix } from "./calculations";
 import MatrixHeatMapDiagramm from "./MatrixHeatMapDiagramm";
 
 function SecondApproach() {
-  const sampleMatrix: number[][] = [
+  const [sampleMatrix, setSampleMatrix] = useState<number[][]>([
     [1, 0.2, 0.3],
     [0.1, 1, 0.2],
     [0.3, -0.1, 1],
-  ];
+  ]);
 
   const initialVectorReset: number[] = [0, 0, 0];
   const [initialVector, setInitialVector] = useState(initialVectorReset);
@@ -48,6 +48,7 @@ function SecondApproach() {
           matrix={sampleMatrix}
           variables={variableNames}
           name="M (Effects)"
+          onMatrixChange={setSampleMatrix}
         />
         <Vector
           name="V (Values)"

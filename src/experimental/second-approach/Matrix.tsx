@@ -1,4 +1,6 @@
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import {
   Table,
   TableBody,
@@ -7,8 +9,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Plus } from "lucide-react";
+import { useState } from "react";
 
-type IMatrix = (number | null)[][];
+type IMatrix = number[][];
 
 interface IProps {
   originalMatrix?: IMatrix;
@@ -16,17 +19,42 @@ interface IProps {
   variables: string[];
   name?: string;
   onVariableSelected?: (variableIndex: number) => void;
+  onMatrixChange?: (updatedMatrix: IMatrix) => void;
 }
 
-function Matrix({ matrix, variables, name, onVariableSelected }: IProps) {
-  const roundIfDouble = (value: number | null) => {
-    if (value === null) return value;
-    // Überprüfen, ob es sich um eine Ganzzahl handelt
-    if (Number.isInteger(value)) {
-      return value;
-    }
-    // Runde auf zwei Nachkommastellen
-    return Number(value.toFixed(2));
+function Matrix({
+  matrix,
+  variables,
+  name,
+  onVariableSelected,
+  onMatrixChange,
+}: IProps) {
+  const [editableMatrix, setEditableMatrix] =
+    useState<(string | number)[][]>(matrix);
+  const [editMode, setEditMode] = useState(false);
+
+  const handleValueChange = (
+    rowIndex: number,
+    colIndex: number,
+    newValue: string,
+  ) => {
+    // Einfach den neuen Wert im State als String speichern (für Edit Mode)
+    const updatedMatrix = [...editableMatrix];
+    updatedMatrix[rowIndex][colIndex] = newValue;
+    setEditableMatrix(updatedMatrix);
+  };
+
+  const handleSave = () => {
+    // Wenn der Edit-Modus beendet wird, parse die Werte
+    const parsedMatrix = editableMatrix.map((row) =>
+      row.map((value) => {
+        // Ersetze Komma mit Punkt und parse als Zahl
+        const valueWithDot = value.toString().replace(",", ".");
+        return isNaN(parseFloat(valueWithDot)) ? 0 : parseFloat(valueWithDot);
+      }),
+    );
+    setEditableMatrix(parsedMatrix);
+    onMatrixChange?.(parsedMatrix); // Falls eine externe Matrixänderung gewünscht ist
   };
 
   return (
@@ -43,7 +71,7 @@ function Matrix({ matrix, variables, name, onVariableSelected }: IProps) {
               </TableCell>
             ))}
           </TableRow>
-          {matrix.map((row, rowIndex) => (
+          {editableMatrix.map((row, rowIndex) => (
             <TableRow key={rowIndex}>
               {onVariableSelected && (
                 <TableCell className="w-10 h-10 border">
@@ -51,14 +79,7 @@ function Matrix({ matrix, variables, name, onVariableSelected }: IProps) {
                     variant="outline"
                     size="icon"
                     className="h-4 w-4 shrink-0 rounded-full"
-                    onClick={() => {
-                      if (
-                        onVariableSelected === null ||
-                        onVariableSelected === undefined
-                      )
-                        return;
-                      onVariableSelected(rowIndex);
-                    }}
+                    onClick={() => onVariableSelected?.(rowIndex)}
                   >
                     <Plus />
                     <span className="sr-only">Increase</span>
@@ -69,16 +90,45 @@ function Matrix({ matrix, variables, name, onVariableSelected }: IProps) {
                 {variables[rowIndex]}
               </TableCell>
               {row.map((value, colIndex) => (
-                <TableCell className={`w-10 h-10 border`} key={colIndex}>
-                  <div className="[text-shadow:-1px_-1px_0_#fff,_1px_-1px_0_#fff,_-1px_1px_0_#fff,_1px_1px_0_#fff]">
-                    {roundIfDouble(value)}
-                  </div>
+                <TableCell className="w-10 h-10 border" key={colIndex}>
+                  {rowIndex === colIndex ? (
+                    <div className="font-bold">{value}</div>
+                  ) : editMode ? (
+                    <input
+                      type="text"
+                      value={value.toString()}
+                      onChange={(e) =>
+                        handleValueChange(rowIndex, colIndex, e.target.value)
+                      }
+                      className="w-full text-center border-none outline-none"
+                      pattern="^[0-9]*[.,]?[0-9]+$" // Akzeptiert Zahlen mit Punkt oder Komma
+                      inputMode="decimal"
+                    />
+                  ) : (
+                    <div>{value}</div>
+                  )}
                 </TableCell>
               ))}
             </TableRow>
           ))}
         </TableBody>
       </Table>
+      <div className="flex items-center space-x-2 mt-5">
+        <Switch
+          id="edit-mode-switch"
+          checked={editMode}
+          onCheckedChange={() => {
+            setEditMode(!editMode);
+            if (editMode) {
+              // Beim Verlassen des Edit-Modus, werte parsen
+              handleSave();
+            }
+          }}
+        />
+        <Label htmlFor="edit-mode-switch">
+          {editMode ? "Deactivate to save changes" : "Activate edit mode"}
+        </Label>
+      </div>
     </div>
   );
 }
