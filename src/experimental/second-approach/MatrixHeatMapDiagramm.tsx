@@ -1,4 +1,7 @@
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { ReactECharts, ReactEChartsProps } from "@/lib/React-ECharts";
+import { useState } from "react";
 
 interface IProps {
   vectors: number[][];
@@ -6,6 +9,8 @@ interface IProps {
 }
 
 function MatrixHeatMapDiagramm({ vectors, variables }: IProps) {
+  const [showCustomColorSchema, setShowCustomColorSchema] = useState(false);
+
   const rounds = Array.from(Array(vectors.length).keys());
 
   const data: number[][] = vectors.flatMap((vector, index) => {
@@ -14,9 +19,12 @@ function MatrixHeatMapDiagramm({ vectors, variables }: IProps) {
     });
   });
 
-  // use only index 2 from vectors for minimal value
-  const minimalValue = Math.min(...vectors.map((vector) => vector[2]));
-  const maximalValue = Math.max(...vectors.map((vector) => vector[2]));
+  const minimalValue = Math.min(...vectors.flat());
+  const maximalValue = Math.max(...vectors.flat());
+  const maximalAbsolutValue = Math.max(
+    Math.abs(minimalValue),
+    Math.abs(maximalValue),
+  );
 
   const option: ReactEChartsProps["option"] = {
     tooltip: {
@@ -44,9 +52,18 @@ function MatrixHeatMapDiagramm({ vectors, variables }: IProps) {
     },
     visualMap: {
       show: false,
-      min: minimalValue,
-      max: maximalValue,
+      min: showCustomColorSchema ? -maximalAbsolutValue : minimalValue,
+      max: showCustomColorSchema ? maximalAbsolutValue : maximalValue,
       calculable: true,
+      inRange: showCustomColorSchema
+        ? {
+            color: [
+              "#FF0000", // Intense red for negative values
+              "#FFFFFF", // White for exactly 0
+              "#00FF00", // Intense green for positive values
+            ],
+          }
+        : undefined,
       orient: "horizontal",
       left: "center",
       bottom: "15%",
@@ -70,7 +87,19 @@ function MatrixHeatMapDiagramm({ vectors, variables }: IProps) {
 
   return (
     <div>
-      <ReactECharts option={option} />
+      <ReactECharts
+        key={showCustomColorSchema ? "custom" : "default"}
+        option={option}
+      />
+      <div className="flex items-center space-x-2 mb-4 ">
+        <Switch
+          id="show-areas"
+          onCheckedChange={() =>
+            setShowCustomColorSchema(!showCustomColorSchema)
+          }
+        />
+        <Label htmlFor="show-areas">Show custom color schema</Label>
+      </div>
     </div>
   );
 }
