@@ -22,7 +22,7 @@ export function multiplyVectorMatrix(
   const vectorBN = vector.map((num) => bignumber(num));
 
   // Perform matrix-vector multiplication using mathjs
-  const resultBN = multiply(matrixBN, vectorBN) as BigNumber[];
+  const resultBN = multiply(vectorBN, matrixBN) as BigNumber[];
 
   // Convert result back to numbers and round to avoid precision issues
   const result = resultBN.map((num) => Number(num.toFixed(10))) as [
