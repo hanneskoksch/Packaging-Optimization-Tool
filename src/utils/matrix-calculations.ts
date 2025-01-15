@@ -5,62 +5,90 @@ interface IMatrixEntry {
   source?: string;
 }
 
-export function createMatrix(
-  variables: ICsvVariable[],
-  interactions: ICsvInteraction[],
-): (IMatrixEntry | null)[][] {
-  // Extract variable IDs
-  const variableIds = variables.map((variable) => variable.id);
+export class MatrixBuilder {
+  private variables: ICsvVariable[];
+  private interactions: ICsvInteraction[];
+  private variableIds: number[];
+  private matrix: (IMatrixEntry | null)[][];
 
-  // Initialize the matrix with dimensions (n + 2) x (n + 2)
-  // +2 for the extra row and column for the sums
-  const matrix: (IMatrixEntry | null)[][] = Array(variableIds.length + 2)
-    .fill(null)
-    .map(() => Array(variableIds.length + 2).fill(null));
-
-  // Set IDs in the first row and the first column of the matrix
-  matrix[0][0] = null; // Top-left corner remains null
-  for (let i = 0; i < variableIds.length; i++) {
-    matrix[0][i + 1] = { value: variableIds[i] }; // IDs in the first row
-    matrix[i + 1][0] = { value: variableIds[i] }; // IDs in the first column
+  constructor(variables: ICsvVariable[], interactions: ICsvInteraction[]) {
+    this.variables = variables;
+    this.interactions = interactions;
+    this.variableIds = variables.map((variable) => variable.id);
+    this.matrix = this.initializeMatrix();
+    this.fillInteractions();
+    this.calculateSums();
   }
 
-  // Insert interactions into the matrix
-  interactions.forEach((interaction) => {
-    const rowIndex = variableIds.indexOf(interaction.variableId) + 1;
-    const colIndex = variableIds.indexOf(interaction.impactVariableId) + 1;
+  /**
+   * Initialize the matrix with dimensions (n + 2) x (n + 2).
+   * Two more in each direction for the the id and the sum of each row and column.
+   */
+  private initializeMatrix(): (IMatrixEntry | null)[][] {
+    const size = this.variableIds.length + 2;
+    return Array(size)
+      .fill(null)
+      .map(() => Array(size).fill(null));
+  }
 
-    // Prevent overwriting the header row and column
-    if (rowIndex > 0 && colIndex > 0) {
-      matrix[rowIndex][colIndex] = {
+  private fillInteractions(): void {
+    // Set headers
+    for (let i = 0; i < this.variableIds.length; i++) {
+      this.matrix[0][i + 1] = { value: this.variableIds[i] };
+      this.matrix[i + 1][0] = { value: this.variableIds[i] };
+    }
+
+    // Insert interaction values
+    this.interactions.forEach((interaction) => {
+      const rowIndex = this.variableIds.indexOf(interaction.variableId) + 1;
+      const colIndex =
+        this.variableIds.indexOf(interaction.impactVariableId) + 1;
+      this.matrix[rowIndex][colIndex] = {
         value: interaction.valueSelfDefined,
         source: interaction.source,
       };
+    });
+  }
+
+  /**
+   * Calculate the absolute sum of each row and column and insert it.
+   */
+  private calculateSums(): void {
+    const size = this.variableIds.length + 1;
+    for (let i = 1; i <= this.variableIds.length; i++) {
+      const rowSum = this.matrix[i]
+        .slice(1, size)
+        .reduce((sum, entry) => sum + Math.abs(entry?.value ?? 0), 0);
+      this.matrix[i][size] = { value: rowSum };
     }
-  });
 
-  // Add row sums (last column) and column sums (last row)
-  const matrixSize = variableIds.length + 1; // Matrix includes header row and column
-  for (let i = 1; i <= variableIds.length; i++) {
-    // Sum for the current row (absolute values)
-    const rowSum = matrix[i]
-      .slice(1, matrixSize) // Exclude header column
-      .reduce<number>((sum, entry) => sum + Math.abs(entry?.value ?? 0), 0); // Use absolute values
-    matrix[i][matrixSize] = { value: rowSum }; // Set row sum in the last column
+    for (let j = 1; j <= this.variableIds.length; j++) {
+      const colSum = this.matrix
+        .slice(1, size)
+        .reduce((sum, row) => sum + Math.abs(row[j]?.value ?? 0), 0);
+      this.matrix[size][j] = { value: colSum };
+    }
   }
 
-  for (let j = 1; j <= variableIds.length; j++) {
-    // Sum for the current column (absolute values)
-    const colSum = matrix
-      .slice(1, matrixSize) // Exclude header row
-      .reduce<number>((sum, row) => sum + Math.abs(row[j]?.value ?? 0), 0); // Use absolute values
-    matrix[matrixSize][j] = { value: colSum }; // Set column sum in the last row
+  /**
+   * @returns The matrix with the ids and the sums of each row and column.
+   */
+  public getMatrixWithIdsAndSums(): (IMatrixEntry | null)[][] {
+    return this.matrix;
   }
 
-  // Set bottom-right corner to null (sum of sums could go here if needed)
-  matrix[matrixSize][matrixSize] = null;
-
-  return matrix;
+  /**
+   * @returns The matrix values only, without the ids and sums.
+   */
+  public getMatrixValuesOnly(): number[][] {
+    return this.matrix
+      .slice(1, this.variableIds.length + 1)
+      .map((row) =>
+        row
+          .slice(1, this.variableIds.length + 1)
+          .map((entry) => entry?.value ?? 0),
+      );
+  }
 }
 
 export interface IVariablesImpact {

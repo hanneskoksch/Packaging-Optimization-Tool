@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ICsvInteraction, ICsvVariable } from "@/types/csv-types";
-import { createMatrix } from "@/utils/matrix-calculations";
+import { MatrixBuilder } from "@/utils/matrix-calculations";
 import { useMemo, useState } from "react";
 import {
   HoverCard,
@@ -26,7 +26,7 @@ function MatrixTable({ variables, interactions }: IProps) {
   const [showColors, setShowColors] = useState(false);
 
   const matrix = useMemo(
-    () => createMatrix(variables, interactions),
+    () => new MatrixBuilder(variables, interactions).getMatrixWithIdsAndSums(),
     [variables, interactions],
   );
 

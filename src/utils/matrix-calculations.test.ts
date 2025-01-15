@@ -1,7 +1,8 @@
-import { ICsvInteraction, ICsvVariable } from "@/types/csv-types";
 import { expect, test } from "vitest";
-import { createMatrix, getVariablesImpacts } from "./matrix-calculations";
+import { getVariablesImpacts, MatrixBuilder } from "./matrix-calculations";
+import { ICsvInteraction, ICsvVariable } from "@/types/csv-types";
 
+// Test data
 const variables: ICsvVariable[] = [
   {
     sustainability: ["Ecologic"],
@@ -71,38 +72,44 @@ const interactions: ICsvInteraction[] = [
   },
 ];
 
-test("Create matrix from variables and interactions", () => {
-  const matrixValues = createMatrix(variables, interactions).map((row) =>
-    row.map((entry) => (entry ? entry.value : null)),
-  );
+// Test für Matrix-Erstellung
+test("MatrixBuilder - Matrix mit IDs und Summen", () => {
+  const matrixBuilder = new MatrixBuilder(variables, interactions);
+  const fullMatrix = matrixBuilder.getMatrixWithIdsAndSums();
 
-  expect(matrixValues).toStrictEqual([
-    [null, 45, 69, 17, null],
-    [45, null, -1, 2, 3],
-    [69, 1, null, null, 1],
-    [17, null, null, null, 0],
-    [null, 1, 1, 2, null],
+  expect(fullMatrix).toStrictEqual([
+    [null, { value: 45 }, { value: 69 }, { value: 17 }, null],
+    [
+      { value: 45 },
+      null,
+      { source: "", value: -1 },
+      { source: "", value: 2 },
+      { value: 3 },
+    ],
+    [{ value: 69 }, { source: "", value: 1 }, null, null, { value: 1 }],
+    [{ value: 17 }, null, null, null, { value: 0 }],
+    [null, { value: 1 }, { value: 1 }, { value: 2 }, null],
   ]);
 });
 
-test("Calculate active and passive sums", () => {
-  const values = getVariablesImpacts(variables, interactions);
+test("MatrixBuilder - Nur Werte der Matrix", () => {
+  const matrixBuilder = new MatrixBuilder(variables, interactions);
+  const matrixValuesOnly = matrixBuilder.getMatrixValuesOnly();
 
-  expect(values).toStrictEqual([
-    {
-      variable: variables[0],
-      activeSum: 3,
-      passiveSum: 1,
-    },
-    {
-      variable: variables[1],
-      activeSum: 1,
-      passiveSum: 1,
-    },
-    {
-      variable: variables[2],
-      activeSum: 0,
-      passiveSum: 2,
-    },
+  expect(matrixValuesOnly).toStrictEqual([
+    [0, -1, 2],
+    [1, 0, 0],
+    [0, 0, 0],
+  ]);
+});
+
+// Test für Active und Passive Summen
+test("MatrixBuilder - Berechnung von Active und Passive Summen", () => {
+  const impacts = getVariablesImpacts(variables, interactions);
+
+  expect(impacts).toStrictEqual([
+    { variable: variables[0], activeSum: 3, passiveSum: 1 },
+    { variable: variables[1], activeSum: 1, passiveSum: 1 },
+    { variable: variables[2], activeSum: 0, passiveSum: 2 },
   ]);
 });
