@@ -1,5 +1,20 @@
 import { expect, test } from "vitest";
 import { multiplyVectorMatrix } from "./calculations";
+import { transpose } from "mathjs";
+
+test("Easy matrix * vector multiplication", () => {
+  const vector: [number, number, number] = [0, 2, 3];
+  let matrix: number[][] = [
+    [-2, 0, 4],
+    [3, 1, -4],
+    [0, 0, 3],
+  ];
+
+  matrix = transpose(matrix);
+
+  const result = multiplyVectorMatrix(vector, matrix);
+  expect(result).toEqual([12, -10, 9]);
+});
 
 test("NEW APPROACH", () => {
   const vector: [number, number, number] = [0.1, 0, 0];
