@@ -8,12 +8,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
 import Upload from "./components/upload/Upload";
 import ExperimentalPage from "./experimental/ExperimentalPage";
 import { ICsvInteraction, ICsvVariable } from "./types/csv-types";
-import { getVariablesImpacts } from "./utils/matrix-calculations";
+import {
+  getVariablesImpacts,
+  MatrixBuilder,
+} from "./utils/matrix-calculations";
 
 export function App() {
   const [variables, setVariables] = useState<null | ICsvVariable[]>(null);
   const [interactions, setInteractions] = useState<null | ICsvInteraction[]>(
     null,
+  );
+
+  const matrix = useMemo(
+    () =>
+      variables !== null && interactions !== null
+        ? new MatrixBuilder(variables, interactions)
+        : null,
+    [variables, interactions],
   );
 
   const variablesImpacts = useMemo(() => {
@@ -67,7 +78,7 @@ export function App() {
           )}
         </TabsContent>
         <TabsContent value="experimental">
-          <ExperimentalPage />
+          <ExperimentalPage matrix={matrix} />
         </TabsContent>
       </Tabs>
     </div>

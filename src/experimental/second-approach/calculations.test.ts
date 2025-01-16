@@ -1,13 +1,17 @@
 import { expect, test } from "vitest";
 import { multiplyVectorMatrix } from "./calculations";
-import { transpose } from "mathjs";
+import { bignumber, BigNumber, transpose } from "mathjs";
 
 test("Easy matrix * vector multiplication", () => {
-  const vector: [number, number, number] = [0, 2, 3];
-  let matrix: number[][] = [
-    [-2, 0, 4],
-    [3, 1, -4],
-    [0, 0, 3],
+  const vector: [BigNumber, BigNumber, BigNumber] = [
+    bignumber(0),
+    bignumber(2),
+    bignumber(3),
+  ];
+  let matrix: BigNumber[][] = [
+    [bignumber(-2), bignumber(0), bignumber(4)],
+    [bignumber(3), bignumber(1), bignumber(-4)],
+    [bignumber(0), bignumber(0), bignumber(3)],
   ];
 
   matrix = transpose(matrix);
@@ -17,11 +21,16 @@ test("Easy matrix * vector multiplication", () => {
 });
 
 test("NEW APPROACH", () => {
-  const vector: [number, number, number] = [0.1, 0, 0];
-  const matrix: number[][] = [
-    [1, 0.2, 0.3],
-    [0.1, 1, 0.2],
-    [0.3, -0.1, 1],
+  const vector: [BigNumber, BigNumber, BigNumber] = [
+    bignumber(0.1),
+    bignumber(0),
+    bignumber(0),
+  ];
+
+  const matrix: BigNumber[][] = [
+    [bignumber(1), bignumber(0.2), bignumber(0.3)],
+    [bignumber(0.1), bignumber(1), bignumber(0.2)],
+    [bignumber(0.3), bignumber(-0.1), bignumber(1)],
   ];
 
   const result = multiplyVectorMatrix(vector, matrix);

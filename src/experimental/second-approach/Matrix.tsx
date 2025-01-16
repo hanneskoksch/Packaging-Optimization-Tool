@@ -9,28 +9,28 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Plus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { bignumber, BigNumber } from "mathjs";
 
-type IMatrix = number[][];
+type IMatrix = BigNumber[][];
 
 interface IProps {
-  originalMatrix?: IMatrix;
   matrix: IMatrix;
-  variables: string[];
   name?: string;
+  variableIds: number[] | string[];
   onVariableSelected?: (variableIndex: number) => void;
   onMatrixChange?: (updatedMatrix: IMatrix) => void;
 }
 
 function Matrix({
   matrix,
-  variables,
   name,
+  variableIds,
   onVariableSelected,
   onMatrixChange,
 }: IProps) {
   const [editableMatrix, setEditableMatrix] =
-    useState<(string | number)[][]>(matrix);
+    useState<(string | BigNumber)[][]>(matrix);
   const [editMode, setEditMode] = useState(false);
 
   const handleValueChange = (
@@ -50,12 +50,18 @@ function Matrix({
       row.map((value) => {
         // Ersetze Komma mit Punkt und parse als Zahl
         const valueWithDot = value.toString().replace(",", ".");
-        return isNaN(parseFloat(valueWithDot)) ? 0 : parseFloat(valueWithDot);
+        return isNaN(parseFloat(valueWithDot))
+          ? bignumber(0)
+          : bignumber(parseFloat(valueWithDot));
       }),
     );
     setEditableMatrix(parsedMatrix);
     onMatrixChange?.(parsedMatrix); // Falls eine externe Matrixänderung gewünscht ist
   };
+
+  useEffect(() => {
+    setEditableMatrix(matrix);
+  }, [matrix]);
 
   return (
     <div>
@@ -65,7 +71,7 @@ function Matrix({
           <TableRow>
             {onVariableSelected && <TableCell className="w-10 h-10 border" />}
             <TableCell className="w-10 h-10 border" />
-            {variables.map((variable, index) => (
+            {variableIds.map((variable, index) => (
               <TableCell key={index} className="w-10 h-10 border font-bold">
                 {variable}
               </TableCell>
@@ -87,12 +93,12 @@ function Matrix({
                 </TableCell>
               )}
               <TableCell className="w-10 h-10 border font-bold">
-                {variables[rowIndex]}
+                {variableIds[rowIndex]}
               </TableCell>
               {row.map((value, colIndex) => (
                 <TableCell className="w-10 h-10 border" key={colIndex}>
                   {rowIndex === colIndex ? (
-                    <div className="font-bold">{value}</div>
+                    <div className="font-bold">{value.toString()}</div>
                   ) : editMode ? (
                     <input
                       type="text"
@@ -105,7 +111,7 @@ function Matrix({
                       inputMode="decimal"
                     />
                   ) : (
-                    <div>{value}</div>
+                    <div>{value.toString()}</div>
                   )}
                 </TableCell>
               ))}

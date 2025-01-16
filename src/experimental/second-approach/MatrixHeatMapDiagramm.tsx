@@ -1,11 +1,12 @@
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { ReactECharts, ReactEChartsProps } from "@/lib/React-ECharts";
+import { BigNumber } from "mathjs";
 import { useState } from "react";
 
 interface IProps {
-  vectors: number[][];
-  variables: string[];
+  vectors: BigNumber[][];
+  variables: string[] | number[];
 }
 
 function MatrixHeatMapDiagramm({ vectors, variables }: IProps) {
@@ -15,12 +16,16 @@ function MatrixHeatMapDiagramm({ vectors, variables }: IProps) {
 
   const data: number[][] = vectors.flatMap((vector, index) => {
     return vector.map((value, innerIndex) => {
-      return [index, innerIndex, value];
+      return [index, innerIndex, value.toNumber()];
     });
   });
 
-  const minimalValue = Math.min(...vectors.flat());
-  const maximalValue = Math.max(...vectors.flat());
+  const minimalValue = Math.min(
+    ...vectors.flat().map((value) => value.toNumber()),
+  );
+  const maximalValue = Math.max(
+    ...vectors.flat().map((value) => value.toNumber()),
+  );
   const maximalAbsolutValue = Math.max(
     Math.abs(minimalValue),
     Math.abs(maximalValue),
@@ -32,7 +37,7 @@ function MatrixHeatMapDiagramm({ vectors, variables }: IProps) {
       position: "top",
     },
     grid: {
-      height: "50%",
+      height: "100%", // Erhöht die Höhe des Diagramms
       top: "10%",
     },
     xAxis: {
@@ -57,16 +62,12 @@ function MatrixHeatMapDiagramm({ vectors, variables }: IProps) {
       calculable: true,
       inRange: showCustomColorSchema
         ? {
-            color: [
-              "#FF0000", // Intense red for negative values
-              "#FFFFFF", // White for exactly 0
-              "#00FF00", // Intense green for positive values
-            ],
+            color: ["#FF0000", "#FFFFFF", "#00FF00"],
           }
         : undefined,
       orient: "horizontal",
       left: "center",
-      bottom: "15%",
+      bottom: "5%", // Position der Legende nach unten verschoben
     },
     series: [
       {
@@ -91,7 +92,7 @@ function MatrixHeatMapDiagramm({ vectors, variables }: IProps) {
         key={showCustomColorSchema ? "custom" : "default"}
         option={option}
       />
-      <div className="flex items-center space-x-2 mb-4 ">
+      <div className="flex items-center space-x-2 mb-4">
         <Switch
           id="show-areas"
           onCheckedChange={() =>

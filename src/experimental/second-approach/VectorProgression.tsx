@@ -1,17 +1,19 @@
+import { BigNumber } from "mathjs";
 import Vector from "./Vector";
 
 interface IProps {
-  vectors: number[][];
+  vectors: BigNumber[][];
+  variables: string[] | number[];
 }
 
-function VectorProgression({ vectors }: IProps) {
+function VectorProgression({ vectors, variables }: IProps) {
   return (
     <div className="flex space-x-1 items-top">
       {vectors.map((vector, index) => (
         <Vector
           key={index}
           name={`V${index}`}
-          variables={["V1", "V2", "V3"]}
+          variables={variables}
           values={vector}
         />
       ))}

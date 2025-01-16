@@ -7,11 +7,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Plus } from "lucide-react";
+import { BigNumber } from "mathjs";
 
 interface IProps {
   name?: string;
-  variables: string[];
-  values: number[];
+  variables: string[] | number[];
+  values: BigNumber[];
   onVariableSelected?: (variableIndex: number) => void;
 }
 
@@ -25,7 +26,9 @@ function Vector({ name, variables, values, onVariableSelected }: IProps) {
           {variables.map((variable, index) => (
             <TableRow key={index}>
               <TableCell className="border font-bold">{variable}</TableCell>
-              <TableCell className="border">{values[index]}</TableCell>
+              <TableCell className="border">
+                {values[index].toString()}
+              </TableCell>
               {onVariableSelected && (
                 <TableCell className="border">
                   <Button

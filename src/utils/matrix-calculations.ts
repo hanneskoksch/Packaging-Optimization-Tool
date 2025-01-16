@@ -1,7 +1,8 @@
 import { ICsvInteraction, ICsvVariable } from "@/types/csv-types";
+import { BigNumber, bignumber } from "mathjs";
 
 interface IMatrixEntry {
-  value: number;
+  value: BigNumber;
   source?: string;
 }
 
@@ -34,8 +35,8 @@ export class MatrixBuilder {
   private fillInteractions(): void {
     // Set headers
     for (let i = 0; i < this.variableIds.length; i++) {
-      this.matrix[0][i + 1] = { value: this.variableIds[i] };
-      this.matrix[i + 1][0] = { value: this.variableIds[i] };
+      this.matrix[0][i + 1] = { value: bignumber(this.variableIds[i]) };
+      this.matrix[i + 1][0] = { value: bignumber(this.variableIds[i]) };
     }
 
     // Insert interaction values
@@ -44,10 +45,16 @@ export class MatrixBuilder {
       const colIndex =
         this.variableIds.indexOf(interaction.impactVariableId) + 1;
       this.matrix[rowIndex][colIndex] = {
-        value: interaction.valueSelfDefined,
+        value: bignumber(interaction.valueSelfDefined),
         source: interaction.source,
       };
     });
+
+    // Fill the diagonal with 1s
+    // (no effect on the variables themselves)
+    for (let i = 1; i <= this.variableIds.length; i++) {
+      this.matrix[i][i] = { value: bignumber(1) };
+    }
   }
 
   /**
@@ -56,17 +63,25 @@ export class MatrixBuilder {
   private calculateSums(): void {
     const size = this.variableIds.length + 1;
     for (let i = 1; i <= this.variableIds.length; i++) {
-      const rowSum = this.matrix[i]
+      const rowSum: BigNumber = this.matrix[i]
         .slice(1, size)
-        .reduce((sum, entry) => sum + Math.abs(entry?.value ?? 0), 0);
-      this.matrix[i][size] = { value: rowSum };
+        .reduce(
+          (sum, entry) =>
+            sum.plus(bignumber(Math.abs(entry?.value.toNumber() ?? 0))),
+          bignumber(0),
+        );
+      this.matrix[i][size] = { value: bignumber(rowSum) };
     }
 
     for (let j = 1; j <= this.variableIds.length; j++) {
       const colSum = this.matrix
         .slice(1, size)
-        .reduce((sum, row) => sum + Math.abs(row[j]?.value ?? 0), 0);
-      this.matrix[size][j] = { value: colSum };
+        .reduce(
+          (sum, row) =>
+            sum.plus(bignumber(Math.abs(row[j]?.value.toNumber() ?? 0))),
+          bignumber(0),
+        );
+      this.matrix[size][j] = { value: bignumber(colSum) };
     }
   }
 
@@ -80,17 +95,19 @@ export class MatrixBuilder {
   /**
    * @returns The matrix values only, without the ids and sums.
    */
-  public getMatrixValuesOnly(): number[][] {
+  public getMatrixValuesOnly(): BigNumber[][] {
     return this.matrix
       .slice(1, this.variableIds.length + 1)
       .map((row) =>
         row
           .slice(1, this.variableIds.length + 1)
-          .map((entry) => entry?.value ?? 0),
+          .map((entry) => entry?.value ?? bignumber(0)),
       );
   }
+  public getVariables(): ICsvVariable[] {
+    return this.variables;
+  }
 }
-
 export interface IVariablesImpact {
   variable: ICsvVariable;
   activeSum: number;
