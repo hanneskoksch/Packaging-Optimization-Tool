@@ -37,12 +37,13 @@ function MatrixHeatMapDiagramm({ vectors, variables }: IProps) {
       position: "top",
     },
     grid: {
-      height: "100%", // Erhöht die Höhe des Diagramms
+      height: "80%",
       top: "10%",
     },
     xAxis: {
       type: "category",
       data: rounds,
+      show: false,
       splitArea: {
         show: true,
       },
@@ -51,6 +52,11 @@ function MatrixHeatMapDiagramm({ vectors, variables }: IProps) {
       type: "category",
       data: variables,
       inverse: true,
+      axisLabel: {
+        show: true,
+        interval: 0, // show all labels
+        formatter: (value) => value,
+      },
       splitArea: {
         show: true,
       },
@@ -67,7 +73,7 @@ function MatrixHeatMapDiagramm({ vectors, variables }: IProps) {
         : undefined,
       orient: "horizontal",
       left: "center",
-      bottom: "5%", // Position der Legende nach unten verschoben
+      bottom: "5%", // position of the legend moved down
     },
     series: [
       {
