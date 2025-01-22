@@ -5,6 +5,12 @@ import { ICsvInteraction, ICsvVariable } from "@/types/csv-types";
 const rowDataToVariables = (rows: any[]): ICsvVariable[] => {
   // remove the header row
   rows.shift();
+
+  // remove last row if it is an empty line
+  if (rows[rows.length - 1].length === 1) {
+    rows.pop();
+  }
+
   return rows.map((row) => ({
     sustainability: (row[0] as string)
       .split("/")
