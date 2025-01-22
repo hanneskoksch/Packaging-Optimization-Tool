@@ -36,6 +36,12 @@ const rowDataToVariables = (rows: any[]): ICsvVariable[] => {
 const rowDataToInteractions = (rows: any[]): ICsvInteraction[] => {
   // remove the header row
   rows.shift();
+
+  // remove last row if it is an empty line
+  if (rows[rows.length - 1].length === 1) {
+    rows.pop();
+  }
+
   return rows.map((row) => ({
     variableId: row[0] as number,
     variable: row[1] as string,
