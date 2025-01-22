@@ -39,10 +39,9 @@ function SecondApproach({ matrix }: IProps) {
     BigNumber[][] | null
   >(null);
 
-  const calculateVectors = (index: number) => {
-    // set initial vector at index to 0.1
+  const calculateVectors = (index: number, value: number) => {
     const newVector = [...initialVector];
-    newVector[index] = newVector[index].plus(0.1);
+    newVector[index] = newVector[index].plus(value);
     setInitialVector(newVector);
 
     const newVectors = [newVector];
@@ -88,9 +87,7 @@ function SecondApproach({ matrix }: IProps) {
               : variableNames
           }
           values={initialVector}
-          onVariableSelected={(index: number) => {
-            calculateVectors(index);
-          }}
+          onVariableSelected={calculateVectors}
         />
         <div className="w-full max-w-sm space-y-2">
           <Label htmlFor="rounds">Rounds to calculate</Label>
