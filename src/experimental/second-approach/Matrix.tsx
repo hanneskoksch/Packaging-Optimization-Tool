@@ -11,6 +11,7 @@ import {
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { bignumber, BigNumber } from "mathjs";
+import { ITraceCalculationHoverData } from "./SecondApproach";
 
 type IMatrix = BigNumber[][];
 
@@ -20,6 +21,7 @@ interface IProps {
   variableIds: number[] | string[];
   onVariableSelected?: (variableIndex: number) => void;
   onMatrixChange?: (updatedMatrix: IMatrix) => void;
+  traceCalculationHoverData: ITraceCalculationHoverData;
 }
 
 function Matrix({
@@ -28,6 +30,7 @@ function Matrix({
   variableIds,
   onVariableSelected,
   onMatrixChange,
+  traceCalculationHoverData,
 }: IProps) {
   const [editableMatrix, setEditableMatrix] =
     useState<(string | BigNumber)[][]>(matrix);
@@ -99,7 +102,10 @@ function Matrix({
                 {variableIds[rowIndex]}
               </TableCell>
               {row.map((value, colIndex) => (
-                <TableCell className="border" key={colIndex}>
+                <TableCell
+                  key={colIndex}
+                  className={`border ${colIndex === traceCalculationHoverData?.variableIndex && "bg-blue-200"}`}
+                >
                   {rowIndex === colIndex ? (
                     <div className="font-bold">{value.toString()}</div>
                   ) : editMode ? (

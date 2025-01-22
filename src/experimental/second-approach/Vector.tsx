@@ -1,5 +1,10 @@
 import { Button } from "@/components/ui/button";
 import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import {
   Table,
   TableBody,
   TableCaption,
@@ -13,11 +18,26 @@ interface IProps {
   name?: string;
   variables: string[] | number[];
   values: BigNumber[];
+  lastVectorValues?: BigNumber[];
+  highlighted?: boolean;
+  matrix?: BigNumber[][];
   onVariableSelected?: (variableIndex: number, value: number) => void;
+  onHoverCallback?: (variableIndex: number | null) => void;
 }
 
 /// Variables show as first column and values as second column
-function Vector({ name, variables, values, onVariableSelected }: IProps) {
+function Vector({
+  name,
+  variables,
+  values,
+  lastVectorValues,
+  highlighted,
+  matrix,
+  onVariableSelected,
+  onHoverCallback,
+}: IProps) {
+  const matrixColumn = (index: number) => matrix?.map((row) => row[index]);
+
   return (
     <div>
       <Table className="border table-auto text-center">
@@ -26,9 +46,48 @@ function Vector({ name, variables, values, onVariableSelected }: IProps) {
           {variables.map((variable, index) => (
             <TableRow key={index}>
               <TableCell className="border font-bold">{variable}</TableCell>
-              <TableCell className="border">
-                {values[index].toString()}
-              </TableCell>
+              <HoverCard
+                openDelay={10} // open new hove card slightly delayed after closing the previous one without delay
+                closeDelay={0}
+                onOpenChange={
+                  onHoverCallback &&
+                  ((variableIndex) =>
+                    onHoverCallback(variableIndex ? index : null))
+                }
+              >
+                <HoverCardTrigger asChild>
+                  <TableCell
+                    className={`border ${highlighted && "bg-yellow-200"} hover:bg-green-200`}
+                  >
+                    <div>{values[index].toString()}</div>
+                  </TableCell>
+                </HoverCardTrigger>
+                <HoverCardContent asChild sideOffset={50}>
+                  {lastVectorValues && matrix && (
+                    <div className="inline">
+                      {lastVectorValues.map((value, i) => (
+                        <div key={i} className="inline">
+                          <p className="inline p-1 rounded-md bg-yellow-200">
+                            {value.toString()}
+                          </p>
+                          <p className="inline p-1 rounded-md">*</p>
+                          <p className="inline p-1 rounded-md bg-blue-200">
+                            {matrixColumn(index)![i]?.toString()}
+                          </p>
+                          {i < lastVectorValues.length - 1 && (
+                            <p className="inline p-1">+</p>
+                          )}
+                        </div>
+                      ))}
+                      <p className="inline p-1 rounded-md">=</p>
+                      <p className="inline p-1 rounded-md bg-green-200">
+                        <b>{values[index].toString()}</b>
+                      </p>
+                    </div>
+                  )}
+                </HoverCardContent>
+              </HoverCard>
+
               {onVariableSelected && (
                 <>
                   <TableCell className="border">

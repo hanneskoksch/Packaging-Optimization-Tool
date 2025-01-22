@@ -1,5 +1,4 @@
 import { Input } from "@/components/ui/input";
-import Vector from "./Vector";
 import { Label } from "@/components/ui/label";
 import Matrix from "./Matrix";
 import { MoveRight } from "lucide-react";
@@ -10,9 +9,15 @@ import MatrixHeatMapDiagramm from "./MatrixHeatMapDiagramm";
 import { MatrixBuilder } from "@/utils/matrix-calculations";
 import { Button } from "@/components/ui/button";
 import { bignumber, BigNumber } from "mathjs";
+import StartingVector from "./StartingVector";
 
 interface IProps {
   matrix: MatrixBuilder | null;
+}
+
+export interface ITraceCalculationHoverData {
+  variableIndex: number | null;
+  vectorIndex: number | null;
 }
 
 function SecondApproach({ matrix }: IProps) {
@@ -39,6 +44,12 @@ function SecondApproach({ matrix }: IProps) {
     BigNumber[][] | null
   >(null);
 
+  const [traceCalculationHoverData, setTraceCalculationHoverData] =
+    useState<ITraceCalculationHoverData>({
+      variableIndex: null,
+      vectorIndex: null,
+    });
+
   const calculateVectors = (index: number, value: number) => {
     const newVector = [...initialVector];
     newVector[index] = newVector[index].plus(value);
@@ -59,9 +70,12 @@ function SecondApproach({ matrix }: IProps) {
         <div className="space-y-4">
           <Matrix
             matrix={sampleMatrix}
+            traceCalculationHoverData={traceCalculationHoverData}
             variableIds={
               dataImported
-                ? matrix!.getVariables().map((variable) => `${variable.variable} (${variable.id})`)
+                ? matrix!
+                    .getVariables()
+                    .map((variable) => `${variable.variable} (${variable.id})`)
                 : variableNames
             }
             name="M (Effects)"
@@ -79,7 +93,7 @@ function SecondApproach({ matrix }: IProps) {
             Use matrix from step 3
           </Button>
         </div>
-        <Vector
+        <StartingVector
           name="V (Values)"
           variables={
             dataImported
@@ -105,12 +119,20 @@ function SecondApproach({ matrix }: IProps) {
             <MoveRight className="size-28" />
             <div className="space-y-8">
               <VectorProgression
+                matrix={sampleMatrix}
                 vectors={calculatedVectors}
                 variables={
                   dataImported
                     ? matrix!.getVariables().map((variable) => variable.id)
                     : variableNames
                 }
+                onHoverCallback={({
+                  variableIndex,
+                  vectorIndex,
+                }: ITraceCalculationHoverData) => {
+                  setTraceCalculationHoverData({ variableIndex, vectorIndex });
+                }}
+                traceCalculationHoverData={traceCalculationHoverData}
               />
               <MatrixHeatMapDiagramm
                 vectors={calculatedVectors}
