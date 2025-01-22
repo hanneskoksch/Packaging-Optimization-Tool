@@ -91,7 +91,9 @@ const DivergingBarChart = ({
     const ctx = canvasRef.current.getContext("2d");
 
     const data = {
-      labels: variables.map((variable) => variable.variable),
+      labels: variables.map(
+        (variable) => `${variable.variable} (${variable.id})`,
+      ),
       datasets: [
         {
           label: "Being impacted (passive)", // Passive sum
@@ -116,7 +118,6 @@ const DivergingBarChart = ({
         plugins: {
           legend: {
             position: "bottom", // Legend below the chart
-
             labels: {
               // Ensure legend labels always use the non-faded colors
               generateLabels: (chart) => {
