@@ -35,6 +35,13 @@ function MatrixHeatMapDiagramm({ vectors, variables }: IProps) {
     tooltip: {
       show: true,
       position: "top",
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      formatter: (params: any) => {
+        return `
+        ${params.marker} <b>${params.value[2]}</b></br>
+        Variable ${variables[params.value[1]]} </br>
+        Round ${rounds[params.value[0]]}`;
+      },
     },
     grid: {
       height: "80%",
