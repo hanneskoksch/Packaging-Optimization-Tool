@@ -61,7 +61,7 @@ function SecondApproach({ matrix }: IProps) {
             matrix={sampleMatrix}
             variableIds={
               dataImported
-                ? matrix!.getVariables().map((variable) => variable.id)
+                ? matrix!.getVariables().map((variable) => `${variable.variable} (${variable.id})`)
                 : variableNames
             }
             name="M (Effects)"

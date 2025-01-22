@@ -65,14 +65,17 @@ function Matrix({
 
   return (
     <div>
-      <Table className="max-w-10 border table-fixed text-center">
+      <Table className="border text-center table-auto">
         <TableCaption>{name}</TableCaption>
         <TableBody>
           <TableRow>
-            {onVariableSelected && <TableCell className="w-10 h-10 border" />}
-            <TableCell className="w-10 h-10 border" />
+            {onVariableSelected && <TableCell className="border" />}
+            <TableCell className="border" />
             {variableIds.map((variable, index) => (
-              <TableCell key={index} className="w-10 h-10 border font-bold">
+              <TableCell
+                key={index}
+                className="text-xs text-left align border font-bold"
+              >
                 {variable}
               </TableCell>
             ))}
@@ -80,7 +83,7 @@ function Matrix({
           {editableMatrix.map((row, rowIndex) => (
             <TableRow key={rowIndex}>
               {onVariableSelected && (
-                <TableCell className="w-10 h-10 border">
+                <TableCell className="border">
                   <Button
                     variant="outline"
                     size="icon"
@@ -92,11 +95,11 @@ function Matrix({
                   </Button>
                 </TableCell>
               )}
-              <TableCell className="w-10 h-10 border font-bold">
+              <TableCell className="border font-bold text-xs text-left whitespace-nowrap">
                 {variableIds[rowIndex]}
               </TableCell>
               {row.map((value, colIndex) => (
-                <TableCell className="w-10 h-10 border" key={colIndex}>
+                <TableCell className="border" key={colIndex}>
                   {rowIndex === colIndex ? (
                     <div className="font-bold">{value.toString()}</div>
                   ) : editMode ? (
