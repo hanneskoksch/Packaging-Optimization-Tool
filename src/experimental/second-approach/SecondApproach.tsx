@@ -4,7 +4,7 @@ import Matrix from "./Matrix";
 import { MoveRight } from "lucide-react";
 import VectorProgression from "./VectorProgression";
 import { useState } from "react";
-import { multiplyVectorMatrix } from "./calculations";
+import { calculateVectorProgression } from "./calculations";
 import MatrixHeatMapDiagramm from "./MatrixHeatMapDiagramm";
 import { MatrixBuilder } from "@/utils/matrix-calculations";
 import { Button } from "@/components/ui/button";
@@ -56,12 +56,11 @@ function SecondApproach({ matrix }: IProps) {
     });
 
   const onStartCalculation = (newVector: BigNumber[]) => {
-    const newVectors = [newVector];
-    for (let i = 0; i < roundsToCalculate; i++) {
-      const latestVector = newVectors[newVectors.length - 1];
-      const newVector = multiplyVectorMatrix(latestVector, sampleMatrix);
-      newVectors.push(newVector);
-    }
+    const newVectors = calculateVectorProgression(
+      newVector,
+      sampleMatrix,
+      roundsToCalculate,
+    );
     setCalculatedVectors(newVectors);
   };
 

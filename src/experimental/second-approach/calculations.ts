@@ -5,6 +5,9 @@ import { multiply, bignumber, BigNumber } from "mathjs";
  *
  * This is not a standard matrix-vector multiplication, but a multiplication of the matrix columns by the vector.
  * So the matrix is transposed before the multiplication.
+ *
+ * @param vector The vector to multiply.
+ * @param matrix The matrix to multiply by.
  */
 export function multiplyVectorMatrix(
   vector: BigNumber[],
@@ -39,3 +42,25 @@ export function multiplyVectorMatrix(
 
   // return result;
 }
+
+/**
+ * Function to calculate the progression of vectors over a number of rounds.
+ *
+ * @param initialVector The initial vector to start the progression.
+ * @param matrix The matrix to use for the calculation.
+ * @param rounds The number of rounds to calculate.
+ * @returns An array of vectors representing the progression over the specified number of rounds.
+ */
+export const calculateVectorProgression = (
+  initialVector: BigNumber[],
+  matrix: BigNumber[][],
+  rounds: number,
+): BigNumber[][] => {
+  const vectors = [initialVector];
+  for (let i = 0; i < rounds; i++) {
+    const latestVector = vectors[vectors.length - 1];
+    const newVector = multiplyVectorMatrix(latestVector, matrix);
+    vectors.push(newVector);
+  }
+  return vectors;
+};
