@@ -13,7 +13,8 @@ interface IProps {
   name?: string;
   variables: string[] | number[];
   values: BigNumber[];
-  onVariableSelected?: (variableIndex: number, value: number) => void;
+  onIncreaseVariable: (variableIndex: number) => void;
+  onDecreaseVariable: (variableIndex: number) => void;
 }
 
 /// Variables show as first column and values as second column
@@ -21,7 +22,8 @@ function StartingVector({
   name,
   variables,
   values,
-  onVariableSelected,
+  onIncreaseVariable,
+  onDecreaseVariable,
 }: IProps) {
   return (
     <div>
@@ -34,38 +36,33 @@ function StartingVector({
               <TableCell className="border">
                 {values[index].toString()}
               </TableCell>
-              {onVariableSelected && (
-                <>
-                  <TableCell className="border">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="h-4 w-4 shrink-0 rounded-full"
-                      onClick={() => {
-                        if (!onVariableSelected) return;
-                        onVariableSelected(index, -0.1);
-                      }}
-                    >
-                      <Minus />
-                      <span className="sr-only">Increase</span>
-                    </Button>
-                  </TableCell>
-                  <TableCell className="border">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="h-4 w-4 shrink-0 rounded-full"
-                      onClick={() => {
-                        if (!onVariableSelected) return;
-                        onVariableSelected(index, 0.1);
-                      }}
-                    >
-                      <Plus />
-                      <span className="sr-only">Increase</span>
-                    </Button>
-                  </TableCell>
-                </>
-              )}
+
+              <TableCell className="border">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-4 w-4 shrink-0 rounded-full"
+                  onClick={() => {
+                    onDecreaseVariable(index);
+                  }}
+                >
+                  <Minus />
+                  <span className="sr-only">Increase</span>
+                </Button>
+              </TableCell>
+              <TableCell className="border">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-4 w-4 shrink-0 rounded-full"
+                  onClick={() => {
+                    onIncreaseVariable(index);
+                  }}
+                >
+                  <Plus />
+                  <span className="sr-only">Increase</span>
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

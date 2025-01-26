@@ -55,11 +55,7 @@ function SecondApproach({ matrix }: IProps) {
       vectorIndex: null,
     });
 
-  const calculateVectors = (index: number, value: number) => {
-    const newVector = [...initialVector];
-    newVector[index] = newVector[index].plus(value);
-    setInitialVector(newVector);
-
+  const onStartCalculation = (newVector: BigNumber[]) => {
     const newVectors = [newVector];
     for (let i = 0; i < roundsToCalculate; i++) {
       const latestVector = newVectors[newVectors.length - 1];
@@ -67,6 +63,20 @@ function SecondApproach({ matrix }: IProps) {
       newVectors.push(newVector);
     }
     setCalculatedVectors(newVectors);
+  };
+
+  const onIncreaseVariable = (index: number) => {
+    const newVector = [...initialVector];
+    newVector[index] = newVector[index].plus(0.1);
+    setInitialVector(newVector);
+    onStartCalculation(newVector);
+  };
+
+  const onDecreaseVariable = (index: number) => {
+    const newVector = [...initialVector];
+    newVector[index] = newVector[index].minus(0.1);
+    setInitialVector(newVector);
+    onStartCalculation(newVector);
   };
 
   return (
@@ -108,7 +118,8 @@ function SecondApproach({ matrix }: IProps) {
           name="V (Values)"
           variables={variableIds}
           values={initialVector}
-          onVariableSelected={calculateVectors}
+          onIncreaseVariable={onIncreaseVariable}
+          onDecreaseVariable={onDecreaseVariable}
         />
         <div className="w-full max-w-sm space-y-2">
           <Label htmlFor="rounds">Rounds to calculate</Label>
@@ -133,7 +144,10 @@ function SecondApproach({ matrix }: IProps) {
                   variableIndex,
                   vectorIndex,
                 }: ITraceCalculationHoverData) => {
-                  setTraceCalculationHoverData({ variableIndex, vectorIndex });
+                  setTraceCalculationHoverData({
+                    variableIndex,
+                    vectorIndex,
+                  });
                 }}
                 traceCalculationHoverData={traceCalculationHoverData}
               />
