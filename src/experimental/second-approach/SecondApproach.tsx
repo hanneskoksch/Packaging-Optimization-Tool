@@ -10,6 +10,7 @@ import { MatrixBuilder } from "@/utils/matrix-calculations";
 import { Button } from "@/components/ui/button";
 import { bignumber, BigNumber } from "mathjs";
 import StartingVector from "./StartingVector";
+import ProgressionLineChart from "./ProgressionLineChart";
 
 interface IProps {
   matrix: MatrixBuilder | null;
@@ -34,9 +35,13 @@ function SecondApproach({ matrix }: IProps) {
   ];
   const [initialVector, setInitialVector] = useState(initialVectorReset);
 
-  const variableNames = ["V1", "V2", "V3"];
+  const initialVariableNames = ["V1", "V2", "V3"];
 
   const [dataImported, setDataImported] = useState(false);
+  const [variableIds, setVariableIds] = useState<string[] | number[]>(
+    initialVariableNames,
+  );
+  const [variableNames, setVariableNames] = useState(initialVariableNames);
 
   const [roundsToCalculate, setRoundsToCalculate] = useState<number>(5);
 
@@ -86,6 +91,12 @@ function SecondApproach({ matrix }: IProps) {
             disabled={matrix === null}
             onClick={() => {
               setDataImported(true);
+              setVariableIds(
+                matrix!.getVariables().map((variable) => variable.id),
+              );
+              setVariableNames(
+                matrix!.getVariables().map((variable) => variable.variable),
+              );
               setSampleMatrix(matrix!.getMatrixValuesOnly());
               setInitialVector(matrix!.getVariables().map(() => bignumber(0)));
             }}
@@ -95,11 +106,7 @@ function SecondApproach({ matrix }: IProps) {
         </div>
         <StartingVector
           name="V (Values)"
-          variables={
-            dataImported
-              ? matrix!.getVariables().map((variable) => variable.id)
-              : variableNames
-          }
+          variables={variableIds}
           values={initialVector}
           onVariableSelected={calculateVectors}
         />
@@ -121,11 +128,7 @@ function SecondApproach({ matrix }: IProps) {
               <VectorProgression
                 matrix={sampleMatrix}
                 vectors={calculatedVectors}
-                variables={
-                  dataImported
-                    ? matrix!.getVariables().map((variable) => variable.id)
-                    : variableNames
-                }
+                variables={variableIds}
                 onHoverCallback={({
                   variableIndex,
                   vectorIndex,
@@ -136,11 +139,11 @@ function SecondApproach({ matrix }: IProps) {
               />
               <MatrixHeatMapDiagramm
                 vectors={calculatedVectors}
-                variables={
-                  dataImported
-                    ? matrix!.getVariables().map((variable) => variable.id)
-                    : variableNames
-                }
+                variables={variableIds}
+              />
+              <ProgressionLineChart
+                vectors={calculatedVectors}
+                variables={variableNames}
               />
             </div>
           </>
