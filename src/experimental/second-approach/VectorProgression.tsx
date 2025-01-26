@@ -21,7 +21,7 @@ function VectorProgression({
   onHoverCallback,
 }: IProps) {
   return (
-    <div className="flex space-x-1 items-top">
+    <div className="flex space-x-1 items-top mr-5">
       {vectors.map((vector, index) => (
         <Vector
           key={index}
