@@ -36,7 +36,7 @@ function VectorProgression({
             ((variableIndex) =>
               onHoverCallback({
                 variableIndex: variableIndex,
-                vectorIndex: variableIndex ? index : null,
+                vectorIndex: variableIndex !== null ? index : null,
               }))
           }
         />
