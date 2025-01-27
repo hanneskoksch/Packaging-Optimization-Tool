@@ -11,7 +11,7 @@ import { ICsvInteraction, ICsvVariable } from "./types/csv-types";
 import {
   getVariablesImpacts,
   MatrixBuilder,
-} from "./utils/matrix-calculations";
+} from "./utils/matrix-builder";
 
 export function App() {
   const [variables, setVariables] = useState<null | ICsvVariable[]>(null);

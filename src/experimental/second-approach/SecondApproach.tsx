@@ -6,7 +6,7 @@ import VectorProgression from "./VectorProgression";
 import { useState } from "react";
 import { calculateVectorProgression } from "./calculations";
 import MatrixHeatMapDiagramm from "./MatrixHeatMapDiagramm";
-import { MatrixBuilder } from "@/utils/matrix-calculations";
+import { MatrixBuilder } from "@/utils/matrix-builder";
 import { Button } from "@/components/ui/button";
 import { bignumber, BigNumber } from "mathjs";
 import StartingVector from "./StartingVector";

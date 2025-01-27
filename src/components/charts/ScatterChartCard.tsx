@@ -1,5 +1,5 @@
 import { Switch } from "@/components/ui/switch";
-import { IVariablesImpact } from "@/utils/matrix-calculations";
+import { IVariablesImpact } from "@/utils/matrix-builder";
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Label } from "../ui/label";

@@ -1,5 +1,5 @@
 import SecondApproach from "./second-approach/SecondApproach";
-import { MatrixBuilder } from "@/utils/matrix-calculations";
+import { MatrixBuilder } from "@/utils/matrix-builder";
 
 interface IProps {
   matrix: MatrixBuilder | null;

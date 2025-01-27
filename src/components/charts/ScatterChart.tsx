@@ -1,4 +1,4 @@
-import { IVariablesImpact } from "@/utils/matrix-calculations";
+import { IVariablesImpact } from "@/utils/matrix-builder";
 import Chart, { ChartOptions } from "chart.js/auto";
 import { useEffect, useRef } from "react";
 import { backgroundImageArePlugin } from "./ScatterChartPlugins";

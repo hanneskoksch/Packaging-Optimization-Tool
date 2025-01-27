@@ -1,4 +1,4 @@
-import { IVariablesImpact } from "@/utils/matrix-calculations";
+import { IVariablesImpact } from "@/utils/matrix-builder";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import DivergingBarChart from "./DivergingBarChart";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";

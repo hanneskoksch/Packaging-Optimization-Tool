@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ICsvInteraction, ICsvVariable } from "@/types/csv-types";
-import { MatrixBuilder } from "@/utils/matrix-calculations";
+import { MatrixBuilder } from "@/utils/matrix-builder";
 import { useMemo, useState } from "react";
 import {
   HoverCard,

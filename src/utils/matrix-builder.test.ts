@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { getVariablesImpacts, MatrixBuilder } from "./matrix-calculations";
+import { getVariablesImpacts, MatrixBuilder } from "./matrix-builder";
 import { ICsvInteraction, ICsvVariable } from "@/types/csv-types";
 
 // Test data
