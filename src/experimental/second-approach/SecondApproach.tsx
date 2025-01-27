@@ -106,7 +106,7 @@ function SecondApproach({ matrix }: IProps) {
               setVariableNames(
                 matrix!.getVariables().map((variable) => variable.variable),
               );
-              setSampleMatrix(matrix!.getMatrixValuesOnly());
+              setSampleMatrix(matrix!.getBigNumberMatrixValuesOnly());
               setInitialVector(matrix!.getVariables().map(() => bignumber(0)));
             }}
           >

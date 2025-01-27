@@ -86,16 +86,34 @@ export class MatrixBuilder {
   }
 
   /**
+   * @returns The matrix with the ids and the sums of each row and column as BigNumber.
+   */
+  public getBigNumberMatrixWithIdsAndSums(): (IMatrixEntry | null)[][] {
+    return this.matrix;
+  }
+
+  /**
    * @returns The matrix with the ids and the sums of each row and column.
    */
-  public getMatrixWithIdsAndSums(): (IMatrixEntry | null)[][] {
-    return this.matrix;
+  public getMatrixWithIdsAndSums() {
+    return this.matrix.map((row) =>
+      row.map((entry) => {
+        if (entry === null) {
+          return null;
+        }
+        return {
+          value: entry.value.toNumber(),
+          // conditionally add source
+          ...(entry.source ? { source: entry.source } : {}),
+        };
+      }),
+    );
   }
 
   /**
    * @returns The matrix values only, without the ids and sums.
    */
-  public getMatrixValuesOnly(): BigNumber[][] {
+  public getBigNumberMatrixValuesOnly(): BigNumber[][] {
     return this.matrix
       .slice(1, this.variableIds.length + 1)
       .map((row) =>
@@ -104,10 +122,25 @@ export class MatrixBuilder {
           .map((entry) => entry?.value ?? bignumber(0)),
       );
   }
+
+  /**
+   * @returns The matrix values only, without the ids and sums.
+   */
+  public getMatrixValuesOnly() {
+    return this.matrix
+      .slice(1, this.variableIds.length + 1)
+      .map((row) =>
+        row
+          .slice(1, this.variableIds.length + 1)
+          .map((entry) => entry?.value.toNumber() ?? 0),
+      );
+  }
+
   public getVariables(): ICsvVariable[] {
     return this.variables;
   }
 }
+
 export interface IVariablesImpact {
   variable: ICsvVariable;
   activeSum: number;
