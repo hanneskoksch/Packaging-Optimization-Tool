@@ -1,7 +1,7 @@
 import { multiply, bignumber, BigNumber } from "mathjs";
 
 /**
- * Function to multiply a vector by a 3x3 matrix using BigNumber for precision.
+ * Function to multiply a vector by a matrix using BigNumber for precision.
  *
  * This is not a standard matrix-vector multiplication, but a multiplication of the matrix columns by the vector.
  * So the matrix is transposed before the multiplication.
@@ -14,14 +14,13 @@ export function multiplyVectorMatrix(
   matrix: BigNumber[][],
 ): BigNumber[] {
   // Validate matrix dimensions
-  // if (matrix.length !== 3 || matrix.some((row) => row.length !== 3)) {
-  //   throw new Error("The matrix must be 3x3.");
-  // }
-
-  // Validate vector length
-  // if (vector.length !== 3) {
-  //   throw new Error("The vector must have 3 components.");
-  // }
+  if (matrix.length !== vector.length || matrix[0].length !== vector.length) {
+    throw new Error(
+      `The matrix dimensions do not match the vector dimensions.\n
+      Matrix: ${matrix.length}x${matrix[0].length}\n
+      Vector: ${vector.length}`,
+    );
+  }
 
   // Convert inputs to BigNumber for higher precision calculations
   const matrixBN = matrix.map((row) => row.map((num) => bignumber(num)));
