@@ -111,7 +111,7 @@ function MatrixTable({ variables, interactions }: IProps) {
               {matrix[index + 1].map((matrixEntry, index) => (
                 <TableCell
                   key={index}
-                  className={`border py-1  text-center ${showColors && index > 0 && index < matrix.length - 1 && getTailwindColor(matrixEntry?.value.toNumber())}`}
+                  className={`border py-1  text-center ${showColors && index > 0 && index < matrix.length - 1 && getTailwindColor(matrixEntry?.value)}`}
                 >
                   <HoverCard openDelay={200}>
                     <HoverCardTrigger asChild>
