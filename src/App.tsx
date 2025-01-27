@@ -8,10 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
 import Upload from "./components/upload/Upload";
 import ExperimentalPage from "./experimental/ExperimentalPage";
 import { ICsvInteraction, ICsvVariable } from "./types/csv-types";
-import {
-  getVariablesImpacts,
-  MatrixBuilder,
-} from "./utils/matrix-builder";
+import { getVariablesImpacts, MatrixBuilder } from "./utils/matrix-builder";
 
 export function App() {
   const [variables, setVariables] = useState<null | ICsvVariable[]>(null);
