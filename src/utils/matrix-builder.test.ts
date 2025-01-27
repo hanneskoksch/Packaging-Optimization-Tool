@@ -72,44 +72,36 @@ const interactions: ICsvInteraction[] = [
   },
 ];
 
-// Test für Matrix-Erstellung
-test("MatrixBuilder - Matrix mit IDs und Summen", () => {
-  const matrixBuilder = new MatrixBuilder(variables, interactions);
-  const fullMatrix = matrixBuilder.getMatrixWithIdsAndSums();
-
-  expect(fullMatrix).toStrictEqual([
-    [null, { value: 45 }, { value: 69 }, { value: 17 }, null],
-    [
-      { value: 45 },
-      null,
-      { source: "", value: -1 },
-      { source: "", value: 2 },
-      { value: 3 },
-    ],
-    [{ value: 69 }, { source: "", value: 1 }, null, null, { value: 1 }],
-    [{ value: 17 }, null, null, null, { value: 0 }],
-    [null, { value: 1 }, { value: 1 }, { value: 2 }, null],
-  ]);
-});
-
-test("MatrixBuilder - Nur Werte der Matrix", () => {
+test("MatrixBuilder - Only matrix values", () => {
   const matrixBuilder = new MatrixBuilder(variables, interactions);
   const matrixValuesOnly = matrixBuilder.getMatrixValuesOnly();
 
   expect(matrixValuesOnly).toStrictEqual([
-    [0, -1, 2],
-    [1, 0, 0],
-    [0, 0, 0],
+    [1, -1, 2],
+    [1, 1, 0],
+    [0, 0, 1],
   ]);
 });
 
-// Test für Active und Passive Summen
-test("MatrixBuilder - Berechnung von Active und Passive Summen", () => {
+test("MatrixBuilder - Calculation of active and passive sums", () => {
   const impacts = getVariablesImpacts(variables, interactions);
 
   expect(impacts).toStrictEqual([
     { variable: variables[0], activeSum: 3, passiveSum: 1 },
     { variable: variables[1], activeSum: 1, passiveSum: 1 },
     { variable: variables[2], activeSum: 0, passiveSum: 2 },
+  ]);
+});
+
+test("MatrixBuilder - Matrix with ids and sums", () => {
+  const matrixBuilder = new MatrixBuilder(variables, interactions);
+  const fullMatrix = matrixBuilder.getMatrixWithIdsAndSums();
+
+  expect(fullMatrix).toStrictEqual([
+    [null, { value: 45 }, { value: 69 }, { value: 17 }, null],
+    [{ value: 45 }, { value: 1 }, { value: -1 }, { value: 2 }, { value: 4 }],
+    [{ value: 69 }, { value: 1 }, { value: 1 }, null, { value: 2 }],
+    [{ value: 17 }, null, null, { value: 1 }, { value: 1 }],
+    [null, { value: 2 }, { value: 2 }, { value: 3 }, null],
   ]);
 });
