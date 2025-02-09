@@ -21,7 +21,7 @@ export interface ITraceCalculationHoverData {
   vectorIndex: number | null;
 }
 
-function SecondApproach({ matrix }: IProps) {
+function MatrixVectorMultiplication({ matrix }: IProps) {
   const [sampleMatrix, setSampleMatrix] = useState<BigNumber[][]>([
     [bignumber(1), bignumber(0.2), bignumber(0.3)],
     [bignumber(0.1), bignumber(1), bignumber(0.2)],
@@ -166,4 +166,4 @@ function SecondApproach({ matrix }: IProps) {
   );
 }
 
-export default SecondApproach;
+export default MatrixVectorMultiplication;

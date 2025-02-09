@@ -1,6 +1,6 @@
 import { BigNumber } from "mathjs";
 import Vector from "./Vector";
-import { ITraceCalculationHoverData } from "./SecondApproach";
+import { ITraceCalculationHoverData } from "./MatrixVectorMultiplication";
 
 interface IProps {
   vectors: BigNumber[][];

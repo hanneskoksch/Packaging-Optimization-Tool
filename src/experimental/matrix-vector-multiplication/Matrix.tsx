@@ -11,7 +11,7 @@ import {
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { bignumber, BigNumber } from "mathjs";
-import { ITraceCalculationHoverData } from "./SecondApproach";
+import { ITraceCalculationHoverData } from "./MatrixVectorMultiplication";
 
 type IMatrix = BigNumber[][];
 
