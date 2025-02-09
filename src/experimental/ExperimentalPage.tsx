@@ -1,3 +1,4 @@
+import InverseMatrix from "./inverse-matrix/InverseMatrix";
 import SecondApproach from "./second-approach/SecondApproach";
 import { MatrixBuilder } from "@/utils/matrix-builder";
 
@@ -7,9 +8,11 @@ interface IProps {
 
 function ExperimentalPage({ matrix }: IProps) {
   return (
-    <div className="m-10 p-10">
-      <h2 className="font-semibold">Second approach</h2>
-      <SecondApproach matrix={matrix} />
+    <div className="mt-10">
+      <h2 className="font-semibold">Matrix multiplication over n rounds</h2>
+      <SecondApproach myMatrix={matrix} />
+      <h2 className="font-semibold">Inverse matrix</h2>
+      <InverseMatrix />
     </div>
   );
 }
