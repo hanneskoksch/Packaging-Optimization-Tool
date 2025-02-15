@@ -21,7 +21,7 @@ interface IProps {
   variableIds: number[] | string[];
   onVariableSelected?: (variableIndex: number) => void;
   onMatrixChange?: (updatedMatrix: IMatrix) => void;
-  traceCalculationHoverData: ITraceCalculationHoverData;
+  traceCalculationHoverData?: ITraceCalculationHoverData;
 }
 
 function Matrix({
@@ -107,7 +107,9 @@ function Matrix({
                   className={`border ${colIndex === traceCalculationHoverData?.variableIndex && "bg-blue-200"}`}
                 >
                   {rowIndex === colIndex ? (
-                    <div className="font-bold">{value.toString()}</div>
+                    <div className="truncate w-20 font-bold">
+                      {value.toString()}
+                    </div>
                   ) : editMode ? (
                     <input
                       type="text"
@@ -115,12 +117,12 @@ function Matrix({
                       onChange={(e) =>
                         handleValueChange(rowIndex, colIndex, e.target.value)
                       }
-                      className="w-full text-center border-none outline-none"
+                      className="w-20 text-center border-none outline-none"
                       pattern="^[0-9]*[.,]?[0-9]+$" // Akzeptiert Zahlen mit Punkt oder Komma
                       inputMode="decimal"
                     />
                   ) : (
-                    <div>{value.toString()}</div>
+                    <div className="truncate w-20">{value.toString()}</div>
                   )}
                 </TableCell>
               ))}
@@ -128,22 +130,24 @@ function Matrix({
           ))}
         </TableBody>
       </Table>
-      <div className="flex items-center space-x-2 mt-5">
-        <Switch
-          id="edit-mode-switch"
-          checked={editMode}
-          onCheckedChange={() => {
-            setEditMode(!editMode);
-            if (editMode) {
-              // Beim Verlassen des Edit-Modus, werte parsen
-              handleSave();
-            }
-          }}
-        />
-        <Label htmlFor="edit-mode-switch">
-          {editMode ? "Deactivate to save changes" : "Activate edit mode"}
-        </Label>
-      </div>
+      {onMatrixChange ? (
+        <div className="flex items-center space-x-2 mt-5">
+          <Switch
+            id="edit-mode-switch"
+            checked={editMode}
+            onCheckedChange={() => {
+              setEditMode(!editMode);
+              if (editMode) {
+                // Beim Verlassen des Edit-Modus, werte parsen
+                handleSave();
+              }
+            }}
+          />
+          <Label htmlFor="edit-mode-switch">
+            {editMode ? "Deactivate to save changes" : "Activate edit mode"}
+          </Label>
+        </div>
+      ) : null}
     </div>
   );
 }
