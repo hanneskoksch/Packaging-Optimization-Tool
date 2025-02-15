@@ -45,7 +45,6 @@ function InverseMatrix() {
         matrix={inversedMatrixValues}
         variableIds={variableNames}
         name="Inverted matrix"
-        onMatrixChange={() => {}}
       />
 
       <EditableVector
