@@ -11,13 +11,6 @@ function InverseMatrix() {
     [bignumber(0.3), bignumber(-0.1), bignumber(1)],
   ]);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const sampleMatrixNotInvertible = [
-    [bignumber(1), bignumber(2), bignumber(3)],
-    [bignumber(2), bignumber(4), bignumber(6)],
-    [bignumber(3), bignumber(6), bignumber(9)],
-  ];
-
   const [vector, setVector] = useState([
     bignumber(0.03),
     bignumber(-0.01),
