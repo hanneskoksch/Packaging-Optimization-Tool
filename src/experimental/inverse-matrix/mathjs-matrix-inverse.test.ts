@@ -1,4 +1,4 @@
-import { bignumber, equal, inv, matrix, multiply, transpose } from "mathjs";
+import { bignumber, equal, inv, matrix, multiply } from "mathjs";
 import { expect, test } from "vitest";
 
 test("2x2 matrix inversion using BigNumber", () => {
