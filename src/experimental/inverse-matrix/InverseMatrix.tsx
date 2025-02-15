@@ -27,37 +27,52 @@ function InverseMatrix() {
   ).map((value) => bignumber(value.toFixed(10)));
 
   return (
-    <div className="m-10 flex space-x-16 items-top">
-      <Matrix
-        matrix={sampleMatrix}
-        variableIds={variableNames}
-        name="Start matrix"
-        onMatrixChange={setSampleMatrix}
-      />
-      <Matrix
-        matrix={inversedMatrixValues}
-        variableIds={variableNames}
-        name="Inverted matrix"
-      />
+    <div>
+      <p className="text-sm">
+        Trying out an approach that uses an{" "}
+        <a href="https://en.wikipedia.org/wiki/Invertible_matrix">
+          inverted matrix
+        </a>{" "}
+        to calculate the input vector (result) by providing the desired outcome
+        vector (goal).
+        <br />
+        The goal then can be calculated with the original matrix in a single
+        step (Rounds to calculate = 1).
+      </p>
+      <div className="m-10 flex space-x-16 items-top">
+        <Matrix
+          matrix={sampleMatrix}
+          variableIds={variableNames}
+          name="Start matrix"
+          onMatrixChange={setSampleMatrix}
+        />
+        <Matrix
+          matrix={inversedMatrixValues}
+          variableIds={variableNames}
+          name="Inverted matrix"
+        />
 
-      <EditableVector
-        name="Vector (goal)"
-        variables={variableNames}
-        values={vector}
-        onVectorChange={setVector}
-      />
+        <EditableVector
+          name="Vector (goal)"
+          variables={variableNames}
+          values={vector}
+          onVectorChange={setVector}
+        />
 
-      <EditableVector
-        name="Vector (result)"
-        variables={variableNames}
-        values={resultVector}
-      />
+        <EditableVector
+          name="Vector (result)"
+          variables={variableNames}
+          values={resultVector}
+        />
 
-      <EditableVector
-        name="Vector (actual)"
-        variables={variableNames}
-        values={multiplyVectorMatrix(resultVector, sampleMatrix) as BigNumber[]}
-      />
+        <EditableVector
+          name="Vector (actual)"
+          variables={variableNames}
+          values={
+            multiplyVectorMatrix(resultVector, sampleMatrix) as BigNumber[]
+          }
+        />
+      </div>
     </div>
   );
 }
