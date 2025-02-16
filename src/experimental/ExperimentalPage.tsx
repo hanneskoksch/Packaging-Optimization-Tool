@@ -17,7 +17,9 @@ function ExperimentalPage({ matrix }: IProps) {
       <h2 className="font-semibold">Inverse matrix</h2>
       <InverseMatrix />
       <Separator className="my-10" />
-      <h2 className="font-semibold">Brute force calculations (work in progress 🚧)</h2>
+      <h2 className="font-semibold">
+        Brute force calculations (work in progress 🚧)
+      </h2>
       <BruteForceCalculations />
     </div>
   );
