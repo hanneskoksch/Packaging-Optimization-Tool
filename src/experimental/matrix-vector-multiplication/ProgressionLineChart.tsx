@@ -5,9 +5,14 @@ import { useEffect, useRef } from "react";
 interface IProps {
   vectors: BigNumber[][];
   variables: string[] | number[];
+  maintainAspectRatio?: boolean;
 }
 
-function ProgressionLineChart({ vectors, variables }: IProps) {
+function ProgressionLineChart({
+  vectors,
+  variables,
+  maintainAspectRatio = true,
+}: IProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -29,6 +34,7 @@ function ProgressionLineChart({ vectors, variables }: IProps) {
 
     const options: ChartOptions = {
       responsive: true,
+      maintainAspectRatio: maintainAspectRatio,
       plugins: {
         legend: {
           display: true,
@@ -52,7 +58,7 @@ function ProgressionLineChart({ vectors, variables }: IProps) {
     return () => {
       myChart.destroy();
     };
-  }, [variables, vectors]);
+  }, [variables, vectors, maintainAspectRatio]);
 
   return (
     <div className="max-w-[800px] max-h-[400px]">
