@@ -1,6 +1,6 @@
 import { Separator } from "@/components/ui/separator";
 import InverseMatrix from "./inverse-matrix/InverseMatrix";
-import SecondApproach from "./matrix-vector-multiplication/MatrixVectorMultiplication";
+import MatrixVectorMultiplication from "./matrix-vector-multiplication/MatrixVectorMultiplication";
 import { MatrixBuilder } from "@/utils/matrix-builder";
 import BruteForceCalculations from "./brute-force-calculations/BruteForceCalculations";
 import InverseMatrix5x5 from "./inverse-matrix-5x5/InverseMatrix";
@@ -13,7 +13,7 @@ function ExperimentalPage({ matrix }: IProps) {
   return (
     <div className="mt-10">
       <h2 className="font-semibold">Matrix multiplication over n rounds</h2>
-      <SecondApproach matrix={matrix} />
+      <MatrixVectorMultiplication matrix={matrix} />
       <Separator className="my-10" />
       <h2 className="font-semibold">Inverse matrix</h2>
       <InverseMatrix importMatrix={matrix} />
