@@ -3,6 +3,7 @@ import { bignumber, BigNumber, inv, matrix, multiply } from "mathjs";
 import { useState } from "react";
 import EditableVector from "./EditableVector";
 import { multiplyVectorMatrix } from "../matrix-vector-multiplication/calculations";
+import Determinant from "../Determinant";
 
 function InverseMatrix() {
   const [sampleMatrix, setSampleMatrix] = useState<BigNumber[][]>([
@@ -46,11 +47,14 @@ function InverseMatrix() {
           name="Start matrix"
           onMatrixChange={setSampleMatrix}
         />
-        <Matrix
-          matrix={inversedMatrixValues}
-          variableIds={variableNames}
-          name="Inverted matrix"
-        />
+        <div className="space-y-4">
+          <Matrix
+            matrix={inversedMatrixValues}
+            variableIds={variableNames}
+            name="Inverted matrix"
+          />
+          <Determinant matrix={sampleMatrix} />
+        </div>
 
         <EditableVector
           name="Vector (goal)"
