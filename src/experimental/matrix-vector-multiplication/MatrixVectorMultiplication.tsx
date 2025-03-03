@@ -73,14 +73,16 @@ function MatrixVectorMultiplication({ matrix }: IProps) {
 
   useEffect(() => {
     // Only calculate if the vector has changed
-    const { initialSampleVector, sampleVector } = useStore.getState();
+    const { initialSampleVector } = useStore.getState();
     const isEqual = initialSampleVector.every((value, index) =>
       equal(value, sampleVector[index]),
     );
     if (!isEqual) {
       onStartCalculation(sampleVector);
+    } else {
+      setCalculatedVectors(null);
     }
-  }, [onStartCalculation]);
+  }, [onStartCalculation, sampleVector]);
 
   return (
     <div className="m-10 flex space-x-16 items-center">

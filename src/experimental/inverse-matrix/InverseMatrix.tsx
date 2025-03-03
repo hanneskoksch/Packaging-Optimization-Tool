@@ -1,40 +1,31 @@
 import Matrix from "@/experimental/matrix-vector-multiplication/Matrix";
 import { bignumber, BigNumber, inv, matrix, multiply } from "mathjs";
-import { useState } from "react";
 import EditableVector from "./EditableVector";
 import { multiplyVectorMatrix } from "../matrix-vector-multiplication/calculations";
 import Determinant from "../Determinant";
 import { Button } from "@/components/ui/button";
 import { MatrixBuilder } from "@/utils/matrix-builder";
+import { useStore } from "@/lib/store";
 
 interface IProps {
   importMatrix: MatrixBuilder | null;
 }
 
 function InverseMatrix({ importMatrix }: IProps) {
-  const [sampleMatrix, setSampleMatrix] = useState<BigNumber[][]>([
-    [bignumber(1), bignumber(0.2), bignumber(0.3)],
-    [bignumber(0.1), bignumber(1), bignumber(0.2)],
-    [bignumber(0.3), bignumber(-0.1), bignumber(1)],
-  ]);
+  const { sampleMatrix, setSampleMatrix } = useStore();
 
-  const initialVectorReset: BigNumber[] = [
-    bignumber(0),
-    bignumber(0),
-    bignumber(0),
-  ];
-  const [initialVector, setInitialVector] = useState(initialVectorReset);
+  const { sampleVector, setSampleVector } = useStore();
 
-  const initialVariableNames = ["V1", "V2", "V3"];
+  const { matrixDataImported, setMatrixDataImported } = useStore();
 
-  const [dataImported, setDataImported] = useState(false);
-  const [variableNames, setVariableNames] = useState(initialVariableNames);
+  const { variableNames, setVariableNames } = useStore();
 
   const inversedMatrixValues = inv(
     matrix(sampleMatrix),
   ).toArray() as BigNumber[][];
+
   const resultVector = (
-    multiply(initialVector, inversedMatrixValues) as BigNumber[]
+    multiply(sampleVector, inversedMatrixValues) as BigNumber[]
   ).map((value) => bignumber(value.toFixed(10)));
 
   return (
@@ -54,7 +45,7 @@ function InverseMatrix({ importMatrix }: IProps) {
         <Matrix
           matrix={sampleMatrix}
           variableIds={
-            dataImported
+            matrixDataImported
               ? importMatrix!
                   .getVariables()
                   .map((variable) => `${variable.variable} (${variable.id})`)
@@ -75,8 +66,8 @@ function InverseMatrix({ importMatrix }: IProps) {
         <EditableVector
           name="Vector (goal)"
           variables={variableNames}
-          values={initialVector}
-          onVectorChange={setInitialVector}
+          values={sampleVector}
+          onVectorChange={setSampleVector}
         />
 
         <EditableVector
@@ -97,14 +88,12 @@ function InverseMatrix({ importMatrix }: IProps) {
         variant="outline"
         disabled={importMatrix === null}
         onClick={() => {
-          setDataImported(true);
+          setMatrixDataImported(true);
           setVariableNames(
             importMatrix!.getVariables().map((variable) => variable.variable),
           );
           setSampleMatrix(importMatrix!.getBigNumberMatrixValuesOnly());
-          setInitialVector(
-            importMatrix!.getVariables().map(() => bignumber(0)),
-          );
+          setSampleVector(importMatrix!.getVariables().map(() => bignumber(0)));
         }}
       >
         Use matrix from step 3
