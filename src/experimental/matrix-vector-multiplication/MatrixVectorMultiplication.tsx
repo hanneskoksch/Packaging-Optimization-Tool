@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { bignumber, BigNumber } from "mathjs";
 import StartingVector from "./StartingVector";
 import ProgressionLineChart from "./ProgressionLineChart";
+import { useStore } from "@/lib/store";
 
 interface IProps {
   matrix: MatrixBuilder | null;
@@ -43,7 +44,7 @@ function MatrixVectorMultiplication({ matrix }: IProps) {
   );
   const [variableNames, setVariableNames] = useState(initialVariableNames);
 
-  const [roundsToCalculate, setRoundsToCalculate] = useState<number>(5);
+  const {roundsToCalculate, setRoundsToCalculate} = useStore();
 
   const [calculatedVectors, setCalculatedVectors] = useState<
     BigNumber[][] | null
