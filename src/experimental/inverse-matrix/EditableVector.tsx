@@ -62,7 +62,7 @@ function EditableVector({ name, variables, values, onVectorChange }: IProps) {
                 {editMode ? (
                   <input
                     type="text"
-                    value={editableVector[index].toString()}
+                    value={editableVector[index]?.toString()}
                     onChange={(e) => handleValueChange(index, e.target.value)}
                     className="w-20 text-center border-none outline-none"
                     pattern="^[0-9]*[.,]?[0-9]+$" // Akzeptiert Zahlen mit Punkt oder Komma
@@ -70,7 +70,7 @@ function EditableVector({ name, variables, values, onVectorChange }: IProps) {
                   />
                 ) : (
                   <div className="truncate w-20">
-                    {editableVector[index].toString()}
+                    {editableVector[index]?.toString()}
                   </div>
                 )}
               </TableCell>

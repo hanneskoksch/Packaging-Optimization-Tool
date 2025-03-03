@@ -4,27 +4,37 @@ import { useState } from "react";
 import EditableVector from "./EditableVector";
 import { multiplyVectorMatrix } from "../matrix-vector-multiplication/calculations";
 import Determinant from "../Determinant";
+import { Button } from "@/components/ui/button";
+import { MatrixBuilder } from "@/utils/matrix-builder";
 
-function InverseMatrix() {
+interface IProps {
+  importMatrix: MatrixBuilder | null;
+}
+
+function InverseMatrix({ importMatrix }: IProps) {
   const [sampleMatrix, setSampleMatrix] = useState<BigNumber[][]>([
     [bignumber(1), bignumber(0.2), bignumber(0.3)],
     [bignumber(0.1), bignumber(1), bignumber(0.2)],
     [bignumber(0.3), bignumber(-0.1), bignumber(1)],
   ]);
 
-  const [vector, setVector] = useState([
-    bignumber(0.03),
-    bignumber(-0.01),
-    bignumber(0.1),
-  ]);
+  const initialVectorReset: BigNumber[] = [
+    bignumber(0),
+    bignumber(0),
+    bignumber(0),
+  ];
+  const [initialVector, setInitialVector] = useState(initialVectorReset);
 
-  const variableNames = ["V1", "V2", "V3"];
+  const initialVariableNames = ["V1", "V2", "V3"];
+
+  const [dataImported, setDataImported] = useState(false);
+  const [variableNames, setVariableNames] = useState(initialVariableNames);
 
   const inversedMatrixValues = inv(
     matrix(sampleMatrix),
   ).toArray() as BigNumber[][];
   const resultVector = (
-    multiply(vector, inversedMatrixValues) as BigNumber[]
+    multiply(initialVector, inversedMatrixValues) as BigNumber[]
   ).map((value) => bignumber(value.toFixed(10)));
 
   return (
@@ -43,7 +53,13 @@ function InverseMatrix() {
       <div className="m-10 flex space-x-16 items-top">
         <Matrix
           matrix={sampleMatrix}
-          variableIds={variableNames}
+          variableIds={
+            dataImported
+              ? importMatrix!
+                  .getVariables()
+                  .map((variable) => `${variable.variable} (${variable.id})`)
+              : variableNames
+          }
           name="Start matrix"
           onMatrixChange={setSampleMatrix}
         />
@@ -59,8 +75,8 @@ function InverseMatrix() {
         <EditableVector
           name="Vector (goal)"
           variables={variableNames}
-          values={vector}
-          onVectorChange={setVector}
+          values={initialVector}
+          onVectorChange={setInitialVector}
         />
 
         <EditableVector
@@ -77,6 +93,22 @@ function InverseMatrix() {
           }
         />
       </div>
+      <Button
+        variant="outline"
+        disabled={importMatrix === null}
+        onClick={() => {
+          setDataImported(true);
+          setVariableNames(
+            importMatrix!.getVariables().map((variable) => variable.variable),
+          );
+          setSampleMatrix(importMatrix!.getBigNumberMatrixValuesOnly());
+          setInitialVector(
+            importMatrix!.getVariables().map(() => bignumber(0)),
+          );
+        }}
+      >
+        Use matrix from step 3
+      </Button>
     </div>
   );
 }

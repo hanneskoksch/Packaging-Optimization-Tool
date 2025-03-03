@@ -16,7 +16,7 @@ function ExperimentalPage({ matrix }: IProps) {
       <SecondApproach matrix={matrix} />
       <Separator className="my-10" />
       <h2 className="font-semibold">Inverse matrix</h2>
-      <InverseMatrix />
+      <InverseMatrix importMatrix={matrix} />
       <Separator className="my-10" />
       <h2 className="font-semibold">Inverse matrix 5x5</h2>
       <InverseMatrix5x5 />
