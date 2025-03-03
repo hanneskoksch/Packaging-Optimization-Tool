@@ -44,27 +44,27 @@ export function App() {
             </div>
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="upload" asChild>
+        <TabsContent value="upload">
           <Upload
             setVariables={setVariables}
             setInteractions={setInteractions}
           />
         </TabsContent>
-        <TabsContent value="check" asChild>
+        <TabsContent value="check">
           {variables && interactions ? (
             <CheckData variables={variables} interactions={interactions} />
           ) : (
             <div>Upload a CSV file first.</div>
           )}
         </TabsContent>
-        <TabsContent value="matrix" asChild>
+        <TabsContent value="matrix">
           {variables && interactions ? (
             <MatrixTable variables={variables} interactions={interactions} />
           ) : (
             <div>Upload a CSV file first.</div>
           )}
         </TabsContent>
-        <TabsContent value="diagrams" asChild>
+        <TabsContent value="diagrams">
           {variablesImpacts ? (
             <div className="flex space-x-3 mt-8">
               <DivergingBarChartCard variablesImpacts={variablesImpacts} />
@@ -74,7 +74,7 @@ export function App() {
             <div>Upload a CSV file first.</div>
           )}
         </TabsContent>
-        <TabsContent value="experimental" asChild>
+        <TabsContent value="experimental">
           <ExperimentalPage matrix={matrix} />
         </TabsContent>
       </Tabs>
