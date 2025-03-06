@@ -4,6 +4,7 @@ import MatrixVectorMultiplication from "./matrix-vector-multiplication/MatrixVec
 import { MatrixBuilder } from "@/utils/matrix-builder";
 import BruteForceCalculations from "./brute-force-calculations/BruteForceCalculations";
 import InverseMatrix5x5 from "./inverse-matrix-5x5/InverseMatrix";
+import SnapshotManager from "./snapshot-manager/SnapshotManager";
 
 interface IProps {
   matrix: MatrixBuilder | null;
@@ -25,6 +26,7 @@ function ExperimentalPage({ matrix }: IProps) {
         Brute force calculations (work in progress 🚧)
       </h2>
       <BruteForceCalculations />
+      <SnapshotManager />
     </div>
   );
 }
