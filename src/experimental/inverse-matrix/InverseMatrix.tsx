@@ -5,20 +5,18 @@ import { multiplyVectorMatrix } from "../matrix-vector-multiplication/calculatio
 import Determinant from "../Determinant";
 import { Button } from "@/components/ui/button";
 import { MatrixBuilder } from "@/utils/matrix-builder";
-import { useStore } from "@/lib/store";
+import { useExperimentalPageStore } from "@/states/experimental-page-store";
 
 interface IProps {
   importMatrix: MatrixBuilder | null;
 }
 
 function InverseMatrix({ importMatrix }: IProps) {
-  const { sampleMatrix, setSampleMatrix } = useStore();
+  const { sampleMatrix, setSampleMatrix } = useExperimentalPageStore();
 
-  const { sampleVector, setSampleVector } = useStore();
+  const { sampleVector, setSampleVector } = useExperimentalPageStore();
 
-  const { matrixDataImported, setMatrixDataImported } = useStore();
-
-  const { variableNames, setVariableNames } = useStore();
+  const { variableNames, setVariableNames } = useExperimentalPageStore();
 
   const inversedMatrixValues = inv(
     matrix(sampleMatrix),
@@ -44,13 +42,7 @@ function InverseMatrix({ importMatrix }: IProps) {
       <div className="m-10 flex space-x-16 items-top">
         <Matrix
           matrix={sampleMatrix}
-          variableIds={
-            matrixDataImported
-              ? importMatrix!
-                  .getVariables()
-                  .map((variable) => `${variable.variable} (${variable.id})`)
-              : variableNames
-          }
+          variableIds={variableNames}
           name="Start matrix"
           onMatrixChange={setSampleMatrix}
         />
@@ -88,7 +80,6 @@ function InverseMatrix({ importMatrix }: IProps) {
         variant="outline"
         disabled={importMatrix === null}
         onClick={() => {
-          setMatrixDataImported(true);
           setVariableNames(
             importMatrix!.getVariables().map((variable) => variable.variable),
           );
