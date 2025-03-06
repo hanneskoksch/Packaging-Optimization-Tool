@@ -70,6 +70,7 @@ function MatrixVectorMultiplication({ matrix }: IProps) {
   };
 
   const onImport = () => {
+    setCalculatedVectors(null);
     setVariableIds(matrix!.getVariables().map((variable) => variable.id));
     setVariableNames(
       matrix!.getVariables().map((variable) => variable.variable),
