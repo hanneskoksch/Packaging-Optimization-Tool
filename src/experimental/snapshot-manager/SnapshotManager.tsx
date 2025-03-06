@@ -89,7 +89,7 @@ export default function SnapshotManager() {
       <motion.div
         initial={false}
         animate={{
-          height: isExpanded ? "auto" : 0,
+          maxHeight: isExpanded ? "300px" : "0px",
           opacity: isExpanded ? 1 : 0,
         }}
         transition={{ duration: 0.3 }}
