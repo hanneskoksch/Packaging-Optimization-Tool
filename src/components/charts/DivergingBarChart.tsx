@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Chart,
   BarController,
@@ -7,6 +7,7 @@ import {
   LinearScale,
   Tooltip,
   Legend,
+  ChartOptions,
 } from "chart.js";
 import { ICsvVariable } from "@/types/csv-types";
 
@@ -35,6 +36,8 @@ const DivergingBarChart = ({
   highlightThreshold,
 }: IProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const chartInstance = useRef<Chart | null>(null);
+  const [initialRender, setInitialRender] = useState(true);
 
   const PASSIVE_COLOR = "#9B2524";
   const PASSIVE_COLOR_FADED = "#EDD4D3";
@@ -42,53 +45,50 @@ const DivergingBarChart = ({
   const ACTIVE_COLOR_FADED = "#D2E3F3";
 
   useEffect(() => {
+    if (!canvasRef.current) return;
+    const ctx = canvasRef.current.getContext("2d");
+
     const getPassiveColor = () => {
       if (showData === "all") return PASSIVE_COLOR;
       if (showData === "rocket") {
-        return activeSums.map((sum) => {
-          return sum > highlightThreshold ? PASSIVE_COLOR : PASSIVE_COLOR_FADED;
-        });
+        return activeSums.map((sum) =>
+          sum > highlightThreshold ? PASSIVE_COLOR : PASSIVE_COLOR_FADED,
+        );
       }
       if (showData === "hourglass") {
-        return passiveSums.map((sum) => {
-          return sum > highlightThreshold ? PASSIVE_COLOR : PASSIVE_COLOR_FADED;
-        });
+        return passiveSums.map((sum) =>
+          sum > highlightThreshold ? PASSIVE_COLOR : PASSIVE_COLOR_FADED,
+        );
       }
       if (showData === "lightning") {
-        return activeSums.map((sum, index) => {
-          return sum > highlightThreshold &&
-            passiveSums[index] > highlightThreshold
+        return activeSums.map((sum, index) =>
+          sum > highlightThreshold && passiveSums[index] > highlightThreshold
             ? PASSIVE_COLOR
-            : PASSIVE_COLOR_FADED;
-        });
+            : PASSIVE_COLOR_FADED,
+        );
       }
     };
 
     const getActiveColor = () => {
       if (showData === "all") return ACTIVE_COLOR;
       if (showData === "rocket") {
-        return activeSums.map((sum) => {
-          return sum > highlightThreshold ? ACTIVE_COLOR : ACTIVE_COLOR_FADED;
-        });
+        return activeSums.map((sum) =>
+          sum > highlightThreshold ? ACTIVE_COLOR : ACTIVE_COLOR_FADED,
+        );
       }
       if (showData === "hourglass") {
-        return passiveSums.map((sum) => {
-          return sum > highlightThreshold ? ACTIVE_COLOR : ACTIVE_COLOR_FADED;
-        });
+        return passiveSums.map((sum) =>
+          sum > highlightThreshold ? ACTIVE_COLOR : ACTIVE_COLOR_FADED,
+        );
       }
       if (showData === "lightning") {
-        return activeSums.map((sum, index) => {
-          return sum > highlightThreshold &&
-            passiveSums[index] > highlightThreshold
+        return activeSums.map((sum, index) =>
+          sum > highlightThreshold && passiveSums[index] > highlightThreshold
             ? ACTIVE_COLOR
-            : ACTIVE_COLOR_FADED;
-        });
+            : ACTIVE_COLOR_FADED,
+        );
       }
     };
-
-    if (!canvasRef.current) return;
-
-    const ctx = canvasRef.current.getContext("2d");
 
     const data = {
       labels: variables.map(
@@ -97,74 +97,89 @@ const DivergingBarChart = ({
       datasets: [
         {
           label: "Being impacted (passive)", // Passive sum
-          data: passiveSums.map((sum) => -sum), // Negative values for left
+          data: passiveSums.map((sum) => -sum), // Negative values for left side
           backgroundColor: getPassiveColor(),
         },
         {
           label: "Impacting (active)", // Active sum
-          data: activeSums, // Positive values for right
+          data: activeSums, // Positive values for right side
           backgroundColor: getActiveColor(),
         },
       ],
     };
 
-    const myChart = new Chart(ctx!, {
-      type: "bar",
-      data: data,
-      options: {
-        animation: false,
-        indexAxis: "y", // Horizontal chart
-        responsive: true,
-        plugins: {
-          legend: {
-            position: "bottom", // Legend below the chart
-            labels: {
-              // Ensure legend labels always use the non-faded colors
-              generateLabels: (chart) => {
-                const datasetColors = [PASSIVE_COLOR, ACTIVE_COLOR];
-                return chart.data.datasets.map((dataset, i) => ({
-                  text: dataset.label ?? "",
-                  fillStyle: datasetColors[i], // Use non-faded colors for the legend
-                  hidden: !chart.isDatasetVisible(i),
-                  lineCap: "butt",
-                  lineDash: [],
-                  lineDashOffset: 0,
-                  lineJoin: "miter",
-                  strokeStyle: datasetColors[i],
-                  pointStyle: "rect",
-                }));
-              },
-            },
-          },
-          tooltip: {
-            callbacks: {
-              label: (tooltipItem) => {
-                const value = Number(tooltipItem.raw);
-                return `${tooltipItem.dataset.label}: ${Math.abs(value)}`; // Show only absolute values
-              },
+    const options: ChartOptions = {
+      animation: {
+        duration: initialRender ? 1000 : 0, // Initial animation only once
+      },
+      indexAxis: "y", // Horizontal chart
+      responsive: true,
+      plugins: {
+        legend: {
+          position: "bottom", // Legend below the chart
+          labels: {
+            // Ensure legend labels always use the non-faded colors
+            generateLabels: (chart) => {
+              const datasetColors = [PASSIVE_COLOR, ACTIVE_COLOR];
+              return chart.data.datasets.map((dataset, i) => ({
+                text: dataset.label ?? "",
+                fillStyle: datasetColors[i], // Use non-faded colors for the legend
+                hidden: !chart.isDatasetVisible(i),
+              }));
             },
           },
         },
-        scales: {
-          x: {
-            display: false, // No x-axis
-            beginAtZero: true,
-            ticks: {
-              callback: (value) => `${Math.abs(Number(value))}`, // Show only absolute values
+        tooltip: {
+          animation: { duration: 400 }, // Keep tooltip animation
+          callbacks: {
+            labelColor: (context) => {
+              const datasetIndex = context.datasetIndex;
+              return {
+                borderColor: "transparent",
+                backgroundColor:
+                  datasetIndex === 0 ? PASSIVE_COLOR : ACTIVE_COLOR,
+              };
             },
-          },
-          y: {
-            stacked: true, // Bars of the same group on same height
+            label: (tooltipItem) => {
+              const value = Number(tooltipItem.raw);
+              return `${tooltipItem.dataset.label}: ${Math.abs(value)}`; // Show only absolute values (values were negated for passive sums on left side)
+            },
           },
         },
       },
+      scales: {
+        x: {
+          display: false, // No x-axis
+          beginAtZero: true,
+          ticks: {
+            callback: (value) => `${Math.abs(Number(value))}`, // Show only absolute values
+          },
+        },
+        y: {
+          stacked: true,
+        },
+      },
+    };
+
+    if (chartInstance.current) {
+      chartInstance.current.destroy();
+    }
+
+    chartInstance.current = new Chart(ctx!, {
+      type: "bar",
+      data,
+      options,
     });
 
-    // Cleanup function to destroy chart instance
+    setInitialRender(false); // Animation only on initial render
+
     return () => {
-      myChart.destroy();
+      if (chartInstance.current) {
+        chartInstance.current.destroy();
+      }
     };
-  }, [variables, passiveSums, activeSums, showData, highlightThreshold]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [variables]); // `passiveSums`, `activeSums`, `showData` change does not require re-render
 
   const diagramHeight = variables.length * 50;
 
