@@ -23,7 +23,7 @@ function ExperimentalPage({ matrix }: IProps) {
       <InverseMatrix5x5 />
       <Separator className="my-10" />
       <h2 className="font-semibold">
-        Brute force calculations (work in progress 🚧)
+        Brute force calculations (discarded, too slow)
       </h2>
       <BruteForceCalculations />
       <SnapshotManager />
