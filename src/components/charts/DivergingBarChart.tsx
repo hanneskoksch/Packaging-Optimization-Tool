@@ -102,7 +102,6 @@ const DivergingBarChart = ({
         },
       },
       tooltip: {
-        animation: { duration: 400 }, // Keep tooltip animation
         callbacks: {
           labelColor: (context) => {
             const datasetIndex = context.datasetIndex;

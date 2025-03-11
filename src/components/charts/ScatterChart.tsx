@@ -60,11 +60,10 @@ const ScatterChart = ({ showImpactAreas, variablesImpacts }: IProps) => {
     },
     plugins: {
       tooltip: {
-        animation: { duration: 400 },
         callbacks: {
           label: (context) => {
             const impact = variablesImpacts[context.dataIndex];
-            return `${impact.variable.variable}: ${impact.passiveSum} (passive), ${impact.activeSum} (active)`;
+            return `${impact.variable.variable}: ${impact.passiveSum} passive, ${impact.activeSum} active`;
           },
         },
       },
