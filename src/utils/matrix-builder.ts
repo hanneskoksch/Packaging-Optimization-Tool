@@ -19,14 +19,17 @@ export class MatrixBuilder {
     this.matrix = this.initializeMatrix();
     this.fillInteractions();
     this.calculateSums();
+    this.calculateProductOfSums();
+    this.calculateQuotient();
   }
 
   /**
-   * Initialize the matrix with dimensions (n + 2) x (n + 2).
-   * Two more in each direction for the the id and the sum of each row and column.
+   * Initialize the matrix with dimensions (n + 3) x (n + 3).
+   * Two more in each direction for the the id and the sum of each row and column,
+   * the product, and the quotient of the sums.
    */
   private initializeMatrix(): (IMatrixEntry | null)[][] {
-    const size = this.variableIds.length + 2;
+    const size = this.variableIds.length + 3;
     return Array(size)
       .fill(null)
       .map(() => Array(size).fill(null));
@@ -58,7 +61,7 @@ export class MatrixBuilder {
   }
 
   /**
-   * Calculate the absolute sum of each row and column and insert it.
+   * Calculate the absolute sum of each row and column and insert it into the matrix.
    */
   private calculateSums(): void {
     const size = this.variableIds.length + 1;
@@ -82,6 +85,36 @@ export class MatrixBuilder {
           bignumber(0),
         );
       this.matrix[size][j] = { value: bignumber(colSum) };
+    }
+  }
+
+  /**
+   * Mulitply the active sum with the passive sum of each variable and insert it into the matrix.
+   */
+  private calculateProductOfSums(): void {
+    for (let i = 1; i <= this.variableIds.length; i++) {
+      const rowSum: BigNumber =
+        this.matrix[i][this.variableIds.length + 1]!.value;
+      const colSum: BigNumber =
+        this.matrix[this.variableIds.length + 1][i]!.value;
+      this.matrix[i][this.variableIds.length + 2] = {
+        value: rowSum.times(colSum),
+      };
+    }
+  }
+
+  /**
+   * Calculate the quotient of the active sum divided by the passive sum of each variable and insert it into the matrix.
+   */
+  private calculateQuotient(): void {
+    for (let i = 1; i <= this.variableIds.length; i++) {
+      const rowSum: BigNumber =
+        this.matrix[i][this.variableIds.length + 1]!.value;
+      const colSum: BigNumber =
+        this.matrix[this.variableIds.length + 1][i]!.value;
+      this.matrix[this.variableIds.length + 2][i] = {
+        value: rowSum.dividedBy(colSum).times(100),
+      };
     }
   }
 

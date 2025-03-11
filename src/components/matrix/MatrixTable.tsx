@@ -72,6 +72,11 @@ function MatrixTable({ variables, interactions }: IProps) {
                 <span className="border-b border-solid p-1">Aktivsumme</span>
               </div>
             </TableHead>
+            <TableHead className="h-48 whitespace-nowrap align-bottom font-bold">
+              <div className="origin-bottom-left -rotate-[45deg] translate-x-[36px] w-[30px]">
+                <span className="border-b border-solid p-1">Product</span>
+              </div>
+            </TableHead>
           </TableRow>
 
           <TableRow>
@@ -130,13 +135,31 @@ function MatrixTable({ variables, interactions }: IProps) {
               ))}
             </TableRow>
           ))}
-          <TableRow>
-            <TableCell className="text-right font-bold" colSpan={5}>
+          {/* Extra row for the passive sum of the variables */}
+          <TableRow className="border-none">
+            <TableCell
+              className="text-right font-bold border-red-300 border-none"
+              colSpan={5}
+            >
               Passivsumme
+            </TableCell>
+            {matrix[matrix.length - 2].slice(1).map((matrixEntry, index) => (
+              <TableCell
+                key={index}
+                className="border border-t-2 border-t-black py-1 text-center"
+              >
+                {matrixEntry?.value.toString()}
+              </TableCell>
+            ))}
+          </TableRow>
+          {/* Extra row for the quotient (active sum / passive sum) of the variables */}
+          <TableRow className="border-none">
+            <TableCell className="text-right font-bold" colSpan={5}>
+              Q*100
             </TableCell>
             {matrix[matrix.length - 1].slice(1).map((matrixEntry, index) => (
               <TableCell key={index} className="border py-1 text-center">
-                {matrixEntry?.value.toString()}
+                {matrixEntry?.value.toFixed().toString()}
               </TableCell>
             ))}
           </TableRow>
