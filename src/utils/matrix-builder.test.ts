@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { getVariablesImpacts, MatrixBuilder } from "./matrix-builder";
+import { MatrixBuilder } from "./matrix-builder";
 import { ICsvInteraction, ICsvVariable } from "@/types/csv-types";
 
 // Test data
@@ -84,7 +84,8 @@ test("MatrixBuilder - Only matrix values", () => {
 });
 
 test("MatrixBuilder - Calculation of active and passive sums", () => {
-  const impacts = getVariablesImpacts(variables, interactions);
+  const matrixBuilder = new MatrixBuilder(variables, interactions);
+  const impacts = matrixBuilder.getVariablesImpacts();
 
   expect(impacts).toStrictEqual([
     { variable: variables[0], activeSum: 3, passiveSum: 1 },
@@ -98,10 +99,9 @@ test("MatrixBuilder - Matrix with ids and sums", () => {
   const fullMatrix = matrixBuilder.getMatrixWithIdsAndSums();
 
   expect(fullMatrix).toStrictEqual([
-    [null, { value: 45 }, { value: 69 }, { value: 17 }, null],
-    [{ value: 45 }, { value: 1 }, { value: -1 }, { value: 2 }, { value: 4 }],
-    [{ value: 69 }, { value: 1 }, { value: 1 }, null, { value: 2 }],
-    [{ value: 17 }, null, null, { value: 1 }, { value: 1 }],
-    [null, { value: 2 }, { value: 2 }, { value: 3 }, null],
+    [null, { value: 45 }, { value: 69 }, { value: 17 }],
+    [{ value: 45 }, { value: 1 }, { value: -1 }, { value: 2 }],
+    [{ value: 69 }, { value: 1 }, { value: 1 }, null],
+    [{ value: 17 }, null, null, { value: 1 }],
   ]);
 });
