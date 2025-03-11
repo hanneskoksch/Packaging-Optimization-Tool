@@ -10,10 +10,10 @@ interface IProps {
   variablesImpacts: IVariablesImpact[];
 }
 
+export type HighlightFilter = "all" | "active" | "passive" | "activeAndPassive";
+
 function DivergingBarChartCard({ variablesImpacts }: IProps) {
-  const [activeTab, setActiveTab] = useState<
-    "all" | "rocket" | "hourglass" | "lightning"
-  >("all");
+  const [activeTab, setActiveTab] = useState<HighlightFilter>("all");
 
   const [barChartHighlightThreshhold, setBarChartHighlightThreshhold] =
     useState(5);
@@ -28,24 +28,22 @@ function DivergingBarChartCard({ variablesImpacts }: IProps) {
           defaultValue="account"
           className="w-[400px]"
           value={activeTab}
-          onValueChange={(value) =>
-            setActiveTab(value as "all" | "rocket" | "hourglass" | "lightning")
-          }
+          onValueChange={(value) => setActiveTab(value as HighlightFilter)}
         >
           <div className="flex items-center space-x-4 mb-4">
             <TabsList>
               <TabsTrigger value="all">
                 <p>Show all</p>
               </TabsTrigger>
-              <TabsTrigger value="rocket" className="space-x-2">
+              <TabsTrigger value="active" className="space-x-2">
                 <p>Show</p>
                 <Rocket size={16} />
               </TabsTrigger>
-              <TabsTrigger value="hourglass" className="space-x-2">
+              <TabsTrigger value="passive" className="space-x-2">
                 <p>Show</p>
                 <Hourglass size={16} />
               </TabsTrigger>
-              <TabsTrigger value="lightning" className="space-x-2">
+              <TabsTrigger value="activeAndPassive" className="space-x-2">
                 <p>Show</p>
                 <Zap size={16} />
               </TabsTrigger>
@@ -99,7 +97,7 @@ function DivergingBarChartCard({ variablesImpacts }: IProps) {
           variables={variablesImpacts.map((x) => x.variable)}
           activeSums={variablesImpacts?.map((x) => x.activeSum) ?? []}
           passiveSums={variablesImpacts?.map((x) => x.passiveSum) ?? []}
-          showData={activeTab}
+          highlightFilter={activeTab}
           highlightThreshold={barChartHighlightThreshhold}
         />
       </CardContent>
