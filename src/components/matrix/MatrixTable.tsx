@@ -60,7 +60,7 @@ function MatrixTable({ variables, interactions }: IProps) {
             {variables.map((variable, index) => (
               <TableHead
                 key={index}
-                className="h-48 whitespace-nowrap align-bottom"
+                className="h-48 whitespace-nowrap align-bottom text-black"
               >
                 <div className="origin-bottom-left -rotate-[45deg] translate-x-[36px] w-[30px]">
                   <span className="border-b border-solid p-1">
@@ -69,12 +69,12 @@ function MatrixTable({ variables, interactions }: IProps) {
                 </div>
               </TableHead>
             ))}
-            <TableHead className="h-48 whitespace-nowrap align-bottom font-bold">
+            <TableHead className="h-48 whitespace-nowrap align-bottom font-bold text-black">
               <div className="origin-bottom-left -rotate-[45deg] translate-x-[36px] w-[30px]">
                 <span className="border-b border-solid p-1">Aktivsumme</span>
               </div>
             </TableHead>
-            <TableHead className="h-48 whitespace-nowrap align-bottom font-bold">
+            <TableHead className="h-48 whitespace-nowrap align-bottom font-bold text-black">
               <div className="origin-bottom-left -rotate-[45deg] translate-x-[36px] w-[30px]">
                 <span className="border-b border-solid p-1">Produkt</span>
               </div>
@@ -82,16 +82,20 @@ function MatrixTable({ variables, interactions }: IProps) {
           </TableRow>
 
           <TableRow>
-            <TableHead className="h-7 border">Sustainability</TableHead>
-            <TableHead className="h-7 border">Category</TableHead>
-            <TableHead className="h-7 border">Variable</TableHead>
-            <TableHead className="h-7 border">Sources</TableHead>
-            <TableHead className="h-7 border">ID</TableHead>
+            <TableHead className="h-7 text-black border">
+              Sustainability
+            </TableHead>
+            <TableHead className="h-7 text-black border">Category</TableHead>
+            <TableHead className="h-7 text-black border">Variable</TableHead>
+            <TableHead className="h-7 text-black border">Sources</TableHead>
+            <TableHead className="h-7 text-black border text-center">
+              ID
+            </TableHead>
             {matrix.getVariableIds().map((variableId, index) => {
               return (
                 <TableHead
                   key={index}
-                  className="h-7 border text-center border-b-2 border-b-black"
+                  className="h-7 border text-center border-b-2 border-b-black  text-black"
                 >
                   {variableId}
                 </TableHead>
@@ -116,7 +120,7 @@ function MatrixTable({ variables, interactions }: IProps) {
               <TableCell className="border py-1 whitespace-nowrap">
                 {variable.variableSource.join(", ")}
               </TableCell>
-              <TableCell className="border py-1 whitespace-nowrap border-r-2 border-r-black">
+              <TableCell className="border py-1 whitespace-nowrap border-r-2 border-r-black font-medium text-center">
                 {matrix.getVariableIds()[rowIndex]}
               </TableCell>
               {matrixValues[rowIndex].map((matrixEntry, columnIndex) => (
