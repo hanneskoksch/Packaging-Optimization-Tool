@@ -102,8 +102,8 @@ function MatrixTable({ variables, interactions }: IProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {variables.map((variable, index) => (
-            <TableRow key={index}>
+          {variables.map((variable, rowIndex) => (
+            <TableRow key={rowIndex}>
               <TableCell className="border py-1 whitespace-nowrap">
                 {variable.sustainability}
               </TableCell>
@@ -117,12 +117,12 @@ function MatrixTable({ variables, interactions }: IProps) {
                 {variable.variableSource.join(", ")}
               </TableCell>
               <TableCell className="border py-1 whitespace-nowrap border-r-2 border-r-black">
-                {matrix.getVariableIds()[index]}
+                {matrix.getVariableIds()[rowIndex]}
               </TableCell>
-              {matrixValues[index].map((matrixEntry, index) => (
+              {matrixValues[rowIndex].map((matrixEntry, columnIndex) => (
                 <TableCell
-                  key={index}
-                  className={`border py-1 text-center ${showColors && index > 0 && index < matrixValues.length && getTailwindColor(matrixEntry?.value)}`}
+                  key={columnIndex}
+                  className={`border py-1 text-center ${showColors && columnIndex > 0 && columnIndex < matrixValues.length ? getTailwindColor(matrixEntry?.value) : ""} ${rowIndex == columnIndex ? "bg-gray-200" : ""}`}
                 >
                   {matrixEntry?.source ? (
                     <HoverCard openDelay={200}>
@@ -144,10 +144,10 @@ function MatrixTable({ variables, interactions }: IProps) {
                 </TableCell>
               ))}
               <TableCell className="border py-1 border-l-2 border-l-black text-center">
-                {matrix.getActiveSums()[index]}
+                {matrix.getActiveSums()[rowIndex]}
               </TableCell>
               <TableCell className="border py-1 text-center">
-                {matrix.getProductOfSums()[index]}
+                {matrix.getProductOfSums()[rowIndex]}
               </TableCell>
             </TableRow>
           ))}
