@@ -88,6 +88,7 @@ const DivergingBarChart = ({
     responsive: true,
     plugins: {
       legend: {
+        // onClick: () => {},
         position: "bottom", // Legend below the chart
         labels: {
           // Ensure legend labels always use the non-faded colors
@@ -97,6 +98,7 @@ const DivergingBarChart = ({
               text: dataset.label ?? "",
               fillStyle: datasetColors[i], // Use non-faded colors for the legend
               hidden: !chart.isDatasetVisible(i),
+              datasetIndex: i, // Required for legend click handling
             }));
           },
         },
