@@ -1,7 +1,7 @@
 import { IVariablesImpact } from "@/utils/matrix-builder";
-import Chart, { ChartOptions } from "chart.js/auto";
-import { useEffect, useRef } from "react";
-import { backgroundImageArePlugin } from "./ScatterChartPlugins";
+import { ChartOptions } from "chart.js/auto";
+import { Scatter } from "react-chartjs-2";
+import { backgroundImagePlugin } from "./ScatterChartPlugins";
 
 interface IProps {
   showImpactAreas: boolean;
@@ -9,93 +9,84 @@ interface IProps {
 }
 
 const ScatterChart = ({ showImpactAreas, variablesImpacts }: IProps) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  // Berechne gemeinsame Min/Max-Werte für beide Achsen
+  const allXValues = variablesImpacts.map((impact) => impact.passiveSum);
+  const allYValues = variablesImpacts.map((impact) => impact.activeSum);
+  const maxValue = Math.max(...allXValues, ...allYValues);
 
-  useEffect(() => {
-    if (!canvasRef.current) return;
+  const data = {
+    datasets: variablesImpacts.map((impact) => ({
+      label: impact.variable.variable,
+      data: [{ x: impact.passiveSum, y: impact.activeSum }],
+      backgroundColor: "#0070C0",
+    })),
+  };
 
-    const ctx = canvasRef.current.getContext("2d");
-
-    // Berechne gemeinsame Min/Max-Werte für beide Achsen
-    const allXValues = variablesImpacts.map((impact) => impact.passiveSum);
-    const allYValues = variablesImpacts.map((impact) => impact.activeSum);
-    const maxValue = Math.max(...allXValues, ...allYValues);
-
-    const data = {
-      datasets: variablesImpacts.map((impact) => ({
-        label: impact.variable.variable,
-        data: [{ x: impact.passiveSum, y: impact.activeSum }],
-        backgroundColor: "#0070C0",
-      })),
-    };
-
-    const options: ChartOptions = {
-      responsive: true,
-      maintainAspectRatio: true,
-      aspectRatio: 1,
-      animation: false,
-      scales: {
-        x: {
-          type: "linear",
-          position: "bottom",
-          title: {
-            display: true,
-            text: "Being impacted (passive)",
-          },
-          max: maxValue + 1,
-          ticks: {
-            stepSize: 1,
-          },
-          grid: {
-            display: !showImpactAreas,
-          },
+  const options: ChartOptions<"scatter"> = {
+    responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 1,
+    scales: {
+      x: {
+        type: "linear",
+        position: "bottom",
+        title: {
+          display: true,
+          text: "Being impacted (passive)",
         },
-        y: {
-          type: "linear",
-          position: "left",
-          title: {
-            display: true,
-            text: "Impacting others (active)",
-          },
-          max: maxValue + 1,
-          ticks: {
-            stepSize: 1,
-          },
-          grid: {
-            display: !showImpactAreas,
+        max: maxValue + 1,
+        ticks: {
+          stepSize: 1,
+        },
+        grid: {
+          display: !showImpactAreas,
+        },
+      },
+      y: {
+        type: "linear",
+        position: "left",
+        title: {
+          display: true,
+          text: "Impacting others (active)",
+        },
+        max: maxValue + 1,
+        ticks: {
+          stepSize: 1,
+        },
+        grid: {
+          display: !showImpactAreas,
+        },
+      },
+    },
+    plugins: {
+      tooltip: {
+        animation: { duration: 400 },
+        callbacks: {
+          label: (context) => {
+            const impact = variablesImpacts[context.dataIndex];
+            return `${impact.variable.variable}: ${impact.passiveSum} (passive), ${impact.activeSum} (active)`;
           },
         },
       },
-      plugins: {
-        legend: {
-          display: false,
-        },
+      legend: {
+        display: false,
       },
-      elements: {
-        point: {
-          radius: 6,
-          hoverRadius: 8,
-        },
+      // Using the custom chartjs plugin options
+      // see https://www.chartjs.org/docs/latest/general/options.html#plugin-options
+      background: {
+        showBackgroundImage: showImpactAreas,
       },
-    };
-
-    const myChart = new Chart(ctx!, {
-      type: "scatter",
-      data: data,
-      options: options,
-      plugins: showImpactAreas ? [backgroundImageArePlugin] : [],
-    });
-
-    // Cleanup function to destroy chart instance
-    return () => {
-      myChart.destroy();
-    };
-  }, [variablesImpacts, showImpactAreas]);
+    },
+    elements: {
+      point: {
+        radius: 6,
+        hoverRadius: 8,
+      },
+    },
+  };
 
   return (
-    <div className="max-w-[800px] max-h-[400px]">
-      <canvas ref={canvasRef}></canvas>
-    </div>
+    <Scatter options={options} data={data} plugins={[backgroundImagePlugin]} />
   );
 };
 
