@@ -3,6 +3,14 @@ import { Plugin } from "chart.js";
 const image = new Image();
 image.src = "scatter_chart_overlay.png";
 
+/**
+ * A Chart.js plugin that displays a background image behind the chart.
+ *
+ * Can be configured to show or hide the background image using the custom plugin option `showBackgroundImage`.
+ *
+ * See https://www.chartjs.org/docs/latest/developers/plugins.html
+ * and https://www.chartjs.org/docs/latest/general/options.html#plugin-options
+ */
 export const backgroundImagePlugin: Plugin<"scatter"> = {
   id: "background",
   beforeDraw: (chart) => {
