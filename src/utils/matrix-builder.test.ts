@@ -96,7 +96,7 @@ test("MatrixBuilder - Calculation of active and passive sums", () => {
 
 test("MatrixBuilder - Matrix with ids and sums", () => {
   const matrixBuilder = new MatrixBuilder(variables, interactions);
-  const fullMatrix = matrixBuilder.getMatrixWithIdsAndSums();
+  const fullMatrix = matrixBuilder.getMatrix();
 
   expect(fullMatrix).toStrictEqual([
     [null, { value: 45 }, { value: 69 }, { value: 17 }],

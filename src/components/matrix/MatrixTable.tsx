@@ -30,7 +30,7 @@ function MatrixTable({ variables, interactions }: IProps) {
     [variables, interactions],
   );
 
-  const matrixValues = matrix.getMatrixWithIdsAndSums();
+  const matrixValues = matrix.getMatrix();
 
   const getTailwindColor = (value: number | null | undefined) => {
     value = Number(value);
@@ -87,19 +87,15 @@ function MatrixTable({ variables, interactions }: IProps) {
             <TableHead className="h-7 border">Variable</TableHead>
             <TableHead className="h-7 border">Sources</TableHead>
             <TableHead className="h-7 border">ID</TableHead>
-            {matrixValues[0].slice(1).map((matrixEntry, index) => {
-              if (index === matrixValues[0].slice(1).length) {
-                return <TableHead key={index} className="h-7 border" />;
-              } else {
-                return (
-                  <TableHead
-                    key={index}
-                    className="h-7 border text-center border-b-2 border-b-black"
-                  >
-                    {matrixEntry?.value.toString()}
-                  </TableHead>
-                );
-              }
+            {matrix.getVariableIds().map((variableId, index) => {
+              return (
+                <TableHead
+                  key={index}
+                  className="h-7 border text-center border-b-2 border-b-black"
+                >
+                  {variableId}
+                </TableHead>
+              );
             })}
             <TableHead className="h-7 border-r"></TableHead>
             <TableHead className="h-7 border-r"></TableHead>
@@ -120,10 +116,13 @@ function MatrixTable({ variables, interactions }: IProps) {
               <TableCell className="border py-1 whitespace-nowrap">
                 {variable.variableSource.join(", ")}
               </TableCell>
-              {matrixValues[index + 1].map((matrixEntry, index) => (
+              <TableCell className="border py-1 whitespace-nowrap border-r-2 border-r-black">
+                {matrix.getVariableIds()[index]}
+              </TableCell>
+              {matrixValues[index].map((matrixEntry, index) => (
                 <TableCell
                   key={index}
-                  className={`border py-1 text-center ${showColors && index > 0 && index < matrixValues.length && getTailwindColor(matrixEntry?.value)} ${index === 0 && "border-r-2 border-r-black"}`}
+                  className={`border py-1 text-center ${showColors && index > 0 && index < matrixValues.length && getTailwindColor(matrixEntry?.value)}`}
                 >
                   {matrixEntry?.source ? (
                     <HoverCard openDelay={200}>

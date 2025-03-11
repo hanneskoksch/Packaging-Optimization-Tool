@@ -29,28 +29,20 @@ export class MatrixBuilder {
   }
 
   /**
-   * Initialize the matrix with dimensions (n + 1) x (n + 1).
-   * One more in each direction for the the id.
+   * Initialize the matrix with dimensions n x n.
    */
   private initializeMatrix(): (IMatrixEntry | null)[][] {
-    const size = this.variableIds.length + 1;
+    const size = this.variableIds.length;
     return Array(size)
       .fill(null)
       .map(() => Array(size).fill(null));
   }
 
   private fillInteractions(): void {
-    // Set headers
-    for (let i = 0; i < this.variableIds.length; i++) {
-      this.matrix[0][i + 1] = { value: bignumber(this.variableIds[i]) };
-      this.matrix[i + 1][0] = { value: bignumber(this.variableIds[i]) };
-    }
-
     // Insert interaction values
     this.interactions.forEach((interaction) => {
-      const rowIndex = this.variableIds.indexOf(interaction.variableId) + 1;
-      const colIndex =
-        this.variableIds.indexOf(interaction.impactVariableId) + 1;
+      const rowIndex = this.variableIds.indexOf(interaction.variableId);
+      const colIndex = this.variableIds.indexOf(interaction.impactVariableId);
       this.matrix[rowIndex][colIndex] = {
         value: bignumber(interaction.valueSelfDefined),
         source: interaction.source,
@@ -59,7 +51,7 @@ export class MatrixBuilder {
 
     // Fill the diagonal with 1s
     // (no effect on the variables themselves)
-    for (let i = 1; i <= this.variableIds.length; i++) {
+    for (let i = 0; i <= this.variableIds.length - 1; i++) {
       this.matrix[i][i] = { value: bignumber(1) };
     }
   }
@@ -94,6 +86,10 @@ export class MatrixBuilder {
     return this.passiveSums;
   }
 
+  public getVariableIds(): number[] {
+    return this.variableIds;
+  }
+
   /**
    * Mulitply the active sum with the passive sum of each variable.
    */
@@ -121,16 +117,16 @@ export class MatrixBuilder {
   }
 
   /**
-   * @returns The matrix with the ids and the sums of each row and column as BigNumber.
+   * @returns The matrix as BigNumber.
    */
-  public getBigNumberMatrixWithIdsAndSums(): (IMatrixEntry | null)[][] {
+  public getBigNumberMatrix(): (IMatrixEntry | null)[][] {
     return this.matrix;
   }
 
   /**
-   * @returns The matrix with the ids and the sums of each row and column.
+   * @returns The matrix.
    */
-  public getMatrixWithIdsAndSums() {
+  public getMatrix() {
     return this.matrix.map((row) =>
       row.map((entry) => {
         if (entry === null) {
@@ -149,18 +145,18 @@ export class MatrixBuilder {
    * @returns The matrix values only, without the ids and sums.
    */
   public getBigNumberMatrixValuesOnly(): BigNumber[][] {
-    return this.matrix
-      .slice(1)
-      .map((row) => row.slice(1).map((entry) => entry?.value ?? bignumber(0)));
+    return this.matrix.map((row) =>
+      row.map((entry) => entry?.value ?? bignumber(0)),
+    );
   }
 
   /**
    * @returns The matrix values only, without the ids and sums.
    */
-  public getMatrixValuesOnly() {
-    return this.matrix
-      .slice(1)
-      .map((row) => row.slice(1).map((entry) => entry?.value.toNumber() ?? 0));
+  public getMatrixValuesOnly(): number[][] {
+    return this.matrix.map((row) =>
+      row.map((entry) => entry?.value.toNumber() ?? 0),
+    );
   }
 
   public getVariables(): ICsvVariable[] {
