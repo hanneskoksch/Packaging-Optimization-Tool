@@ -26,9 +26,11 @@ function MatrixTable({ variables, interactions }: IProps) {
   const [showColors, setShowColors] = useState(false);
 
   const matrix = useMemo(
-    () => new MatrixBuilder(variables, interactions).getMatrixWithIdsAndSums(),
+    () => new MatrixBuilder(variables, interactions),
     [variables, interactions],
   );
+
+  const matrixValues = matrix.getMatrixWithIdsAndSums();
 
   const getTailwindColor = (value: number | null | undefined) => {
     value = Number(value);
@@ -53,7 +55,7 @@ function MatrixTable({ variables, interactions }: IProps) {
     <div>
       <Table className="text-xs mb-5 max-w-screen-lg">
         <TableHeader>
-          <TableRow>
+          <TableRow className="border-none">
             <TableHead colSpan={5} />
             {variables.map((variable, index) => (
               <TableHead
@@ -74,7 +76,7 @@ function MatrixTable({ variables, interactions }: IProps) {
             </TableHead>
             <TableHead className="h-48 whitespace-nowrap align-bottom font-bold">
               <div className="origin-bottom-left -rotate-[45deg] translate-x-[36px] w-[30px]">
-                <span className="border-b border-solid p-1">Product</span>
+                <span className="border-b border-solid p-1">Produkt</span>
               </div>
             </TableHead>
           </TableRow>
@@ -85,17 +87,22 @@ function MatrixTable({ variables, interactions }: IProps) {
             <TableHead className="h-7 border">Variable</TableHead>
             <TableHead className="h-7 border">Sources</TableHead>
             <TableHead className="h-7 border">ID</TableHead>
-            {matrix[0].slice(1).map((matrixEntry, index) => {
-              if (index === matrix[0].slice(1).length - 1) {
+            {matrixValues[0].slice(1).map((matrixEntry, index) => {
+              if (index === matrixValues[0].slice(1).length) {
                 return <TableHead key={index} className="h-7 border" />;
               } else {
                 return (
-                  <TableHead key={index} className="h-7 border text-center">
+                  <TableHead
+                    key={index}
+                    className="h-7 border text-center border-b-2 border-b-black"
+                  >
                     {matrixEntry?.value.toString()}
                   </TableHead>
                 );
               }
             })}
+            <TableHead className="h-7 border-r"></TableHead>
+            <TableHead className="h-7 border-r"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -113,10 +120,10 @@ function MatrixTable({ variables, interactions }: IProps) {
               <TableCell className="border py-1 whitespace-nowrap">
                 {variable.variableSource.join(", ")}
               </TableCell>
-              {matrix[index + 1].map((matrixEntry, index) => (
+              {matrixValues[index + 1].map((matrixEntry, index) => (
                 <TableCell
                   key={index}
-                  className={`border py-1  text-center ${showColors && index > 0 && index < matrix.length - 2 && getTailwindColor(matrixEntry?.value)}`}
+                  className={`border py-1 text-center ${showColors && index > 0 && index < matrixValues.length && getTailwindColor(matrixEntry?.value)} ${index === 0 && "border-r-2 border-r-black"}`}
                 >
                   {matrixEntry?.source ? (
                     <HoverCard openDelay={200}>
@@ -137,8 +144,15 @@ function MatrixTable({ variables, interactions }: IProps) {
                   )}
                 </TableCell>
               ))}
+              <TableCell className="border py-1 border-l-2 border-l-black text-center">
+                {matrix.getActiveSums()[index]}
+              </TableCell>
+              <TableCell className="border py-1 text-center">
+                {matrix.getProductOfSums()[index]}
+              </TableCell>
             </TableRow>
           ))}
+
           {/* Extra row for the passive sum of the variables */}
           <TableRow className="border-none">
             <TableCell
@@ -147,29 +161,25 @@ function MatrixTable({ variables, interactions }: IProps) {
             >
               Passivsumme
             </TableCell>
-            {matrix[matrix.length - 2]
-              .slice(1, -2)
-              .map((matrixEntry, index) => (
-                <TableCell
-                  key={index}
-                  className="border border-t-2 border-t-black py-1 text-center"
-                >
-                  {matrixEntry?.value.toString()}
-                </TableCell>
-              ))}
+            {matrix.getPassiveSums().map((matrixEntry, index) => (
+              <TableCell
+                key={index}
+                className="border border-t-2 border-t-black py-1 text-center"
+              >
+                {matrixEntry}
+              </TableCell>
+            ))}
           </TableRow>
           {/* Extra row for the quotient (active sum / passive sum) of the variables */}
           <TableRow className="border-none">
             <TableCell className="text-right font-bold" colSpan={5}>
               Q*100
             </TableCell>
-            {matrix[matrix.length - 1]
-              .slice(1, -2)
-              .map((matrixEntry, index) => (
-                <TableCell key={index} className="border py-1 text-center">
-                  {matrixEntry?.value.toFixed().toString()}
-                </TableCell>
-              ))}
+            {matrix.getQuotients().map((matrixEntry, index) => (
+              <TableCell key={index} className="border py-1 text-center">
+                {matrixEntry !== Infinity ? matrixEntry.toFixed() : "-"}
+              </TableCell>
+            ))}
           </TableRow>
         </TableBody>
       </Table>

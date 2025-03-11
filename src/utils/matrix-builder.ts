@@ -11,6 +11,10 @@ export class MatrixBuilder {
   private interactions: ICsvInteraction[];
   private variableIds: number[];
   private matrix: (IMatrixEntry | null)[][];
+  private activeSums: number[];
+  private passiveSums: number[];
+  private productOfSums: number[];
+  private quotients: number[];
 
   constructor(variables: ICsvVariable[], interactions: ICsvInteraction[]) {
     this.variables = variables;
@@ -18,18 +22,18 @@ export class MatrixBuilder {
     this.variableIds = variables.map((variable) => variable.id);
     this.matrix = this.initializeMatrix();
     this.fillInteractions();
-    this.calculateSums();
-    this.calculateProductOfSums();
-    this.calculateQuotient();
+    this.activeSums = this.calculateActiveSums();
+    this.passiveSums = this.calculatePassiveSums();
+    this.productOfSums = this.calculateProductOfSums();
+    this.quotients = this.calculateQuotient();
   }
 
   /**
-   * Initialize the matrix with dimensions (n + 3) x (n + 3).
-   * Two more in each direction for the the id and the sum of each row and column,
-   * the product, and the quotient of the sums.
+   * Initialize the matrix with dimensions (n + 1) x (n + 1).
+   * One more in each direction for the the id.
    */
   private initializeMatrix(): (IMatrixEntry | null)[][] {
-    const size = this.variableIds.length + 3;
+    const size = this.variableIds.length + 1;
     return Array(size)
       .fill(null)
       .map(() => Array(size).fill(null));
@@ -60,62 +64,60 @@ export class MatrixBuilder {
     }
   }
 
-  /**
-   * Calculate the absolute sum of each row and column and insert it into the matrix.
-   */
-  private calculateSums(): void {
-    const size = this.variableIds.length + 1;
-    for (let i = 1; i <= this.variableIds.length; i++) {
-      const rowSum: BigNumber = this.matrix[i]
-        .slice(1, size)
-        .reduce(
-          (sum, entry) =>
-            sum.plus(bignumber(Math.abs(entry?.value.toNumber() ?? 0))),
-          bignumber(0),
-        );
-      this.matrix[i][size] = { value: bignumber(rowSum) };
-    }
+  private calculateActiveSums(): number[] {
+    return this.variables.map((variable) =>
+      this.interactions
+        .filter((interaction) => interaction.variableId === variable.id)
+        .reduce<number>(
+          (sum, interaction) => sum + Math.abs(interaction.valueSelfDefined),
+          0,
+        ),
+    );
+  }
 
-    for (let j = 1; j <= this.variableIds.length; j++) {
-      const colSum = this.matrix
-        .slice(1, size)
-        .reduce(
-          (sum, row) =>
-            sum.plus(bignumber(Math.abs(row[j]?.value.toNumber() ?? 0))),
-          bignumber(0),
-        );
-      this.matrix[size][j] = { value: bignumber(colSum) };
-    }
+  public getActiveSums(): number[] {
+    return this.activeSums;
+  }
+
+  private calculatePassiveSums(): number[] {
+    return this.variables.map((variable) =>
+      this.interactions
+        .filter((interaction) => interaction.impactVariableId === variable.id)
+        .reduce<number>(
+          (sum, interaction) => sum + Math.abs(interaction.valueSelfDefined),
+          0,
+        ),
+    );
+  }
+
+  public getPassiveSums(): number[] {
+    return this.passiveSums;
   }
 
   /**
-   * Mulitply the active sum with the passive sum of each variable and insert it into the matrix.
+   * Mulitply the active sum with the passive sum of each variable.
    */
-  private calculateProductOfSums(): void {
-    for (let i = 1; i <= this.variableIds.length; i++) {
-      const rowSum: BigNumber =
-        this.matrix[i][this.variableIds.length + 1]!.value;
-      const colSum: BigNumber =
-        this.matrix[this.variableIds.length + 1][i]!.value;
-      this.matrix[i][this.variableIds.length + 2] = {
-        value: rowSum.times(colSum),
-      };
-    }
+  private calculateProductOfSums(): number[] {
+    return this.activeSums.map(
+      (activeSum, index) => activeSum * this.passiveSums[index],
+    );
   }
 
   /**
-   * Calculate the quotient of the active sum divided by the passive sum of each variable and insert it into the matrix.
+   * Calculate the quotient of the active sum divided by the passive sum of each variable.
    */
-  private calculateQuotient(): void {
-    for (let i = 1; i <= this.variableIds.length; i++) {
-      const rowSum: BigNumber =
-        this.matrix[i][this.variableIds.length + 1]!.value;
-      const colSum: BigNumber =
-        this.matrix[this.variableIds.length + 1][i]!.value;
-      this.matrix[this.variableIds.length + 2][i] = {
-        value: rowSum.dividedBy(colSum).times(100),
-      };
-    }
+  private calculateQuotient(): number[] {
+    return this.activeSums.map(
+      (activeSum, index) => activeSum / this.passiveSums[index],
+    );
+  }
+
+  public getProductOfSums(): number[] {
+    return this.productOfSums;
+  }
+
+  public getQuotients(): number[] {
+    return this.quotients;
   }
 
   /**
@@ -148,12 +150,8 @@ export class MatrixBuilder {
    */
   public getBigNumberMatrixValuesOnly(): BigNumber[][] {
     return this.matrix
-      .slice(1, this.variableIds.length + 1)
-      .map((row) =>
-        row
-          .slice(1, this.variableIds.length + 1)
-          .map((entry) => entry?.value ?? bignumber(0)),
-      );
+      .slice(1)
+      .map((row) => row.slice(1).map((entry) => entry?.value ?? bignumber(0)));
   }
 
   /**
@@ -161,12 +159,8 @@ export class MatrixBuilder {
    */
   public getMatrixValuesOnly() {
     return this.matrix
-      .slice(1, this.variableIds.length + 1)
-      .map((row) =>
-        row
-          .slice(1, this.variableIds.length + 1)
-          .map((entry) => entry?.value.toNumber() ?? 0),
-      );
+      .slice(1)
+      .map((row) => row.slice(1).map((entry) => entry?.value.toNumber() ?? 0));
   }
 
   public getVariables(): ICsvVariable[] {
