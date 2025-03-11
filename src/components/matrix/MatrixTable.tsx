@@ -51,7 +51,7 @@ function MatrixTable({ variables, interactions }: IProps) {
 
   return (
     <div>
-      <Table className="text-xs mb-5">
+      <Table className="text-xs mb-5 max-w-screen-lg">
         <TableHeader>
           <TableRow>
             <TableHead colSpan={5} />
