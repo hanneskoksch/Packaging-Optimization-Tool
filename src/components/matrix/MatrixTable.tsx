@@ -143,25 +143,29 @@ function MatrixTable({ variables, interactions }: IProps) {
             >
               Passivsumme
             </TableCell>
-            {matrix[matrix.length - 2].slice(1).map((matrixEntry, index) => (
-              <TableCell
-                key={index}
-                className="border border-t-2 border-t-black py-1 text-center"
-              >
-                {matrixEntry?.value.toString()}
-              </TableCell>
-            ))}
+            {matrix[matrix.length - 2]
+              .slice(1, -2)
+              .map((matrixEntry, index) => (
+                <TableCell
+                  key={index}
+                  className="border border-t-2 border-t-black py-1 text-center"
+                >
+                  {matrixEntry?.value.toString()}
+                </TableCell>
+              ))}
           </TableRow>
           {/* Extra row for the quotient (active sum / passive sum) of the variables */}
           <TableRow className="border-none">
             <TableCell className="text-right font-bold" colSpan={5}>
               Q*100
             </TableCell>
-            {matrix[matrix.length - 1].slice(1).map((matrixEntry, index) => (
-              <TableCell key={index} className="border py-1 text-center">
-                {matrixEntry?.value.toFixed().toString()}
-              </TableCell>
-            ))}
+            {matrix[matrix.length - 1]
+              .slice(1, -2)
+              .map((matrixEntry, index) => (
+                <TableCell key={index} className="border py-1 text-center">
+                  {matrixEntry?.value.toFixed().toString()}
+                </TableCell>
+              ))}
           </TableRow>
         </TableBody>
       </Table>
