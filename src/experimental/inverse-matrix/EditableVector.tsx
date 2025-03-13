@@ -85,7 +85,6 @@ function EditableVector({ name, variables, values, onVectorChange }: IProps) {
             onCheckedChange={() => {
               setEditMode(!editMode);
               if (editMode) {
-                // When the edit mode is exited, parse the values
                 handleSave();
               }
             }}
