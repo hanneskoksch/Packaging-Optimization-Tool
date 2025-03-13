@@ -46,47 +46,47 @@ function Vector({
           {variables.map((variable, index) => (
             <TableRow key={index}>
               <TableCell className="border font-bold">{variable}</TableCell>
-              <HoverCard
-                openDelay={10} // open new hove card slightly delayed after closing the previous one without delay
-                closeDelay={0}
-                onOpenChange={
-                  onHoverCallback &&
-                  ((variableIndex) =>
-                    onHoverCallback(variableIndex ? index : null))
-                }
+              <TableCell
+                className={`border ${highlighted && "bg-yellow-200"} hover:bg-green-200`}
               >
-                <HoverCardTrigger asChild>
-                  <TableCell
-                    className={`border ${highlighted && "bg-yellow-200"} hover:bg-green-200`}
-                  >
+                <HoverCard
+                  openDelay={10} // open new hove card slightly delayed after closing the previous one without delay
+                  closeDelay={0}
+                  onOpenChange={
+                    onHoverCallback &&
+                    ((variableIndex) =>
+                      onHoverCallback(variableIndex ? index : null))
+                  }
+                >
+                  <HoverCardTrigger asChild>
                     <div>{values[index].toString()}</div>
-                  </TableCell>
-                </HoverCardTrigger>
-                <HoverCardContent asChild sideOffset={50}>
-                  {lastVectorValues && matrix && (
-                    <div className="inline">
-                      {lastVectorValues.map((value, i) => (
-                        <div key={i} className="inline">
-                          <p className="inline p-1 rounded-md bg-yellow-200">
-                            {value.toString()}
-                          </p>
-                          <p className="inline p-1 rounded-md">*</p>
-                          <p className="inline p-1 rounded-md bg-blue-200">
-                            {matrixColumn(index)![i]?.toString()}
-                          </p>
-                          {i < lastVectorValues.length - 1 && (
-                            <p className="inline p-1">+</p>
-                          )}
-                        </div>
-                      ))}
-                      <p className="inline p-1 rounded-md">=</p>
-                      <p className="inline p-1 rounded-md bg-green-200">
-                        <b>{values[index].toString()}</b>
-                      </p>
-                    </div>
-                  )}
-                </HoverCardContent>
-              </HoverCard>
+                  </HoverCardTrigger>
+                  <HoverCardContent asChild sideOffset={50}>
+                    {lastVectorValues && matrix && (
+                      <div className="inline">
+                        {lastVectorValues.map((value, i) => (
+                          <div key={i} className="inline">
+                            <p className="inline p-1 rounded-md bg-yellow-200">
+                              {value.toString()}
+                            </p>
+                            <p className="inline p-1 rounded-md">*</p>
+                            <p className="inline p-1 rounded-md bg-blue-200">
+                              {matrixColumn(index)![i]?.toString()}
+                            </p>
+                            {i < lastVectorValues.length - 1 && (
+                              <p className="inline p-1">+</p>
+                            )}
+                          </div>
+                        ))}
+                        <p className="inline p-1 rounded-md">=</p>
+                        <p className="inline p-1 rounded-md bg-green-200">
+                          <b>{values[index].toString()}</b>
+                        </p>
+                      </div>
+                    )}
+                  </HoverCardContent>
+                </HoverCard>
+              </TableCell>
 
               {onVariableSelected && (
                 <>
