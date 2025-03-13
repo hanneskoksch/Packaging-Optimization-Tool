@@ -41,17 +41,16 @@ function Matrix({
     colIndex: number,
     newValue: string,
   ) => {
-    // Einfach den neuen Wert im State als String speichern (für Edit Mode)
     const updatedMatrix = [...editableMatrix];
     updatedMatrix[rowIndex][colIndex] = newValue;
     setEditableMatrix(updatedMatrix);
   };
 
   const handleSave = () => {
-    // Wenn der Edit-Modus beendet wird, parse die Werte
+    // When the edit mode is exited, parse the values
     const parsedMatrix = editableMatrix.map((row) =>
       row.map((value) => {
-        // Ersetze Komma mit Punkt und parse als Zahl
+        // Replace comma with period and parse as number
         const valueWithDot = value.toString().replace(",", ".");
         return isNaN(parseFloat(valueWithDot))
           ? bignumber(0)
@@ -59,7 +58,7 @@ function Matrix({
       }),
     );
     setEditableMatrix(parsedMatrix);
-    onMatrixChange?.(parsedMatrix); // Falls eine externe Matrixänderung gewünscht ist
+    onMatrixChange?.(parsedMatrix);
   };
 
   useEffect(() => {
@@ -118,7 +117,7 @@ function Matrix({
                         handleValueChange(rowIndex, colIndex, e.target.value)
                       }
                       className="w-20 text-center border-none outline-none"
-                      pattern="^[0-9]*[.,]?[0-9]+$" // Akzeptiert Zahlen mit Punkt oder Komma
+                      pattern="^[0-9]*[.,]?[0-9]+$" // Accepts numbers with periods or commas
                       inputMode="decimal"
                     />
                   ) : (
@@ -138,7 +137,7 @@ function Matrix({
             onCheckedChange={() => {
               setEditMode(!editMode);
               if (editMode) {
-                // Beim Verlassen des Edit-Modus, werte parsen
+                // When the edit mode is exited, parse the values
                 handleSave();
               }
             }}

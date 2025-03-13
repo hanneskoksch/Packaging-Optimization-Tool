@@ -9,7 +9,7 @@ interface IProps {
 }
 
 const ScatterChart = ({ showImpactAreas, variablesImpacts }: IProps) => {
-  // Berechne gemeinsame Min/Max-Werte für beide Achsen
+  // Calculate min/max values for both axes
   const allXValues = variablesImpacts.map((impact) => impact.passiveSum);
   const allYValues = variablesImpacts.map((impact) => impact.activeSum);
   const maxValue = Math.max(...allXValues, ...allYValues);

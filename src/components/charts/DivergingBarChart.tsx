@@ -88,7 +88,6 @@ const DivergingBarChart = ({
     responsive: true,
     plugins: {
       legend: {
-        // onClick: () => {},
         position: "bottom", // Legend below the chart
         labels: {
           // Ensure legend labels always use the non-faded colors

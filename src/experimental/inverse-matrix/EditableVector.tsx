@@ -29,9 +29,9 @@ function EditableVector({ name, variables, values, onVectorChange }: IProps) {
   const [editMode, setEditMode] = useState(false);
 
   const handleSave = () => {
-    // Wenn der Edit-Modus beendet wird, parse die Werte
+    // When the edit mode is exited, parse the values
     const parsedVector = editableVector.map((value) => {
-      // Ersetze Komma mit Punkt und parse als Zahl
+      // Replace comma with period and parse as number
       const valueWithDot = value.toString().replace(",", ".");
       return isNaN(parseFloat(valueWithDot))
         ? bignumber(0)
@@ -39,11 +39,10 @@ function EditableVector({ name, variables, values, onVectorChange }: IProps) {
     });
 
     setEditableVector(parsedVector);
-    onVectorChange?.(parsedVector); // Falls eine externe Matrixänderung gewünscht ist
+    onVectorChange?.(parsedVector);
   };
 
   const handleValueChange = (index: number, newValue: string) => {
-    // Einfach den neuen Wert im State als String speichern (für Edit Mode)
     const updatedVector = [...editableVector];
     updatedVector[index] = newValue;
     setEditableVector(updatedVector);
@@ -65,7 +64,7 @@ function EditableVector({ name, variables, values, onVectorChange }: IProps) {
                     value={editableVector[index]?.toString()}
                     onChange={(e) => handleValueChange(index, e.target.value)}
                     className="w-20 text-center border-none outline-none"
-                    pattern="^[0-9]*[.,]?[0-9]+$" // Akzeptiert Zahlen mit Punkt oder Komma
+                    pattern="^[0-9]*[.,]?[0-9]+$" // Accepts numbers with a period or comma
                     inputMode="decimal"
                   />
                 ) : (
@@ -86,7 +85,7 @@ function EditableVector({ name, variables, values, onVectorChange }: IProps) {
             onCheckedChange={() => {
               setEditMode(!editMode);
               if (editMode) {
-                // Beim Verlassen des Edit-Modus, werte parsen
+                // When the edit mode is exited, parse the values
                 handleSave();
               }
             }}
