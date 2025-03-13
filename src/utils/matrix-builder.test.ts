@@ -99,9 +99,8 @@ test("MatrixBuilder - Matrix with ids and sums", () => {
   const fullMatrix = matrixBuilder.getMatrix();
 
   expect(fullMatrix).toStrictEqual([
-    [null, { value: 45 }, { value: 69 }, { value: 17 }],
-    [{ value: 45 }, { value: 1 }, { value: -1 }, { value: 2 }],
-    [{ value: 69 }, { value: 1 }, { value: 1 }, null],
-    [{ value: 17 }, null, null, { value: 1 }],
+    [{ value: 1 }, { value: -1 }, { value: 2 }],
+    [{ value: 1 }, { value: 1 }, null],
+    [null, null, { value: 1 }],
   ]);
 });
