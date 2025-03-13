@@ -14,7 +14,8 @@ interface IProps {
 function InverseMatrix({ importMatrix }: IProps) {
   const { sampleMatrix, setSampleMatrix } = useExperimentalPageStore();
 
-  const { sampleVector, setSampleVector } = useExperimentalPageStore();
+  const { sampleVectorInverse, setSampleVectorInverse } =
+    useExperimentalPageStore();
 
   const { variableNames, setVariableNames } = useExperimentalPageStore();
 
@@ -23,7 +24,7 @@ function InverseMatrix({ importMatrix }: IProps) {
   ).toArray() as BigNumber[][];
 
   const resultVector = (
-    multiply(sampleVector, inversedMatrixValues) as BigNumber[]
+    multiply(sampleVectorInverse, inversedMatrixValues) as BigNumber[]
   ).map((value) => bignumber(value.toFixed(10)));
 
   return (
@@ -58,8 +59,8 @@ function InverseMatrix({ importMatrix }: IProps) {
         <EditableVector
           name="Vector (goal)"
           variables={variableNames}
-          values={sampleVector}
-          onVectorChange={setSampleVector}
+          values={sampleVectorInverse}
+          onVectorChange={setSampleVectorInverse}
         />
 
         <EditableVector
@@ -84,7 +85,9 @@ function InverseMatrix({ importMatrix }: IProps) {
             importMatrix!.getVariables().map((variable) => variable.variable),
           );
           setSampleMatrix(importMatrix!.getBigNumberMatrixValuesOnly());
-          setSampleVector(importMatrix!.getVariables().map(() => bignumber(0)));
+          setSampleVectorInverse(
+            importMatrix!.getVariables().map(() => bignumber(0)),
+          );
         }}
       >
         Use matrix from step 3
