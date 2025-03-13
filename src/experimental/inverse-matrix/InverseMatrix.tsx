@@ -17,7 +17,7 @@ function InverseMatrix({ importMatrix }: IProps) {
   const { sampleVectorInverse, setSampleVectorInverse } =
     useExperimentalPageStore();
 
-  const { variableNames, setVariableNames } = useExperimentalPageStore();
+  const { variableNames, onImportMatrix } = useExperimentalPageStore();
 
   const inversedMatrixValues = inv(
     matrix(sampleMatrix),
@@ -80,15 +80,7 @@ function InverseMatrix({ importMatrix }: IProps) {
       <Button
         variant="outline"
         disabled={importMatrix === null}
-        onClick={() => {
-          setVariableNames(
-            importMatrix!.getVariables().map((variable) => variable.variable),
-          );
-          setSampleMatrix(importMatrix!.getBigNumberMatrixValuesOnly());
-          setSampleVectorInverse(
-            importMatrix!.getVariables().map(() => bignumber(0)),
-          );
-        }}
+        onClick={() => onImportMatrix(importMatrix!)}
       >
         Use matrix from step 3
       </Button>

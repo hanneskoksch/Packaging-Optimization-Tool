@@ -8,7 +8,7 @@ import { calculateVectorProgression } from "./calculations";
 import MatrixHeatMapDiagramm from "./MatrixHeatMapDiagramm";
 import { MatrixBuilder } from "@/utils/matrix-builder";
 import { Button } from "@/components/ui/button";
-import { bignumber, BigNumber, equal } from "mathjs";
+import { BigNumber, equal } from "mathjs";
 import StartingVector from "./StartingVector";
 import ProgressionLineChart from "./ProgressionLineChart";
 import { useExperimentalPageStore } from "@/states/experimental-page-store";
@@ -25,17 +25,15 @@ function MatrixVectorMultiplication({ matrix }: IProps) {
   const { sampleMatrix, setSampleMatrix } = useExperimentalPageStore();
 
   const { sampleVector, setSampleVector } = useExperimentalPageStore();
+  const { onImportMatrix } = useExperimentalPageStore();
 
-  const { variableNames, setVariableNames } = useExperimentalPageStore();
-
-  const { variableIds, setVariableIds } = useExperimentalPageStore();
+  const { variableNames, variableIds } = useExperimentalPageStore();
 
   const { roundsToCalculate, setRoundsToCalculate } =
     useExperimentalPageStore();
 
-  const [calculatedVectors, setCalculatedVectors] = useState<
-    BigNumber[][] | null
-  >(null);
+  const { calculatedVectors, setCalculatedVectors } =
+    useExperimentalPageStore();
 
   const [traceCalculationHoverData, setTraceCalculationHoverData] =
     useState<ITraceCalculationHoverData>({
@@ -52,7 +50,7 @@ function MatrixVectorMultiplication({ matrix }: IProps) {
       );
       setCalculatedVectors(newVectors);
     },
-    [sampleMatrix, roundsToCalculate],
+    [sampleMatrix, roundsToCalculate, setCalculatedVectors],
   );
 
   const onIncreaseVariable = (index: number) => {
@@ -69,18 +67,6 @@ function MatrixVectorMultiplication({ matrix }: IProps) {
     onStartCalculation(newVector);
   };
 
-  const onImport = () => {
-    setCalculatedVectors(null);
-    setVariableIds(matrix!.getVariables().map((variable) => variable.id));
-    setVariableNames(
-      matrix!
-        .getVariables()
-        .map((variable) => `${variable.variable} (${variable.id})`),
-    );
-    setSampleMatrix(matrix!.getBigNumberMatrixValuesOnly());
-    setSampleVector(matrix!.getVariables().map(() => bignumber(0)));
-  };
-
   useEffect(() => {
     // Only calculate if the vector has changed (has non zero values)
     const isEqual = sampleVector.every((value) => equal(value, 0));
@@ -89,7 +75,7 @@ function MatrixVectorMultiplication({ matrix }: IProps) {
     } else {
       setCalculatedVectors(null);
     }
-  }, [onStartCalculation, sampleVector]);
+  }, [onStartCalculation, sampleVector, setCalculatedVectors]);
 
   return (
     <div className="m-10 flex space-x-16 items-center">
@@ -105,7 +91,7 @@ function MatrixVectorMultiplication({ matrix }: IProps) {
           <Button
             variant="outline"
             disabled={matrix === null}
-            onClick={onImport}
+            onClick={() => onImportMatrix(matrix!)}
           >
             Use matrix from step 3
           </Button>

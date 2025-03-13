@@ -1,6 +1,7 @@
 import { BigNumber } from "mathjs";
 import { create } from "zustand";
 import { bignumber } from "mathjs";
+import { MatrixBuilder } from "@/utils/matrix-builder";
 
 export interface ExperimentalState {
   roundsToCalculate: number;
@@ -18,6 +19,9 @@ export interface ExperimentalState {
   setVariableNames: (newVariableNames: string[]) => void;
   variableIds: string[] | number[];
   setVariableIds: (newVariableIds: string[] | number[]) => void;
+  onImportMatrix: (matrix: MatrixBuilder) => void;
+  calculatedVectors: BigNumber[][] | null;
+  setCalculatedVectors: (newCalculatedVectors: BigNumber[][] | null) => void;
 }
 
 export const useExperimentalPageStore = create<ExperimentalState>()((set) => ({
@@ -47,4 +51,20 @@ export const useExperimentalPageStore = create<ExperimentalState>()((set) => ({
   variableIds: ["V1", "V2", "V3"],
   setVariableIds: (newVariableIds) =>
     set(() => ({ variableIds: newVariableIds })),
+  onImportMatrix: (matrix) => {
+    const newSampleVector = matrix!.getVariables().map(() => bignumber(0));
+    set(() => ({
+      calculatedVectors: null,
+      variableIds: matrix!.getVariables().map((variable) => variable.id),
+      variableNames: matrix!
+        .getVariables()
+        .map((variable) => `${variable.variable} (${variable.id})`),
+      sampleMatrix: matrix!.getBigNumberMatrixValuesOnly(),
+      sampleVector: newSampleVector,
+      sampleVectorInverse: newSampleVector,
+    }));
+  },
+  calculatedVectors: null,
+  setCalculatedVectors: (newCalculatedVectors) =>
+    set(() => ({ calculatedVectors: newCalculatedVectors })),
 }));
