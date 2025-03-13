@@ -73,7 +73,9 @@ function MatrixVectorMultiplication({ matrix }: IProps) {
     setCalculatedVectors(null);
     setVariableIds(matrix!.getVariables().map((variable) => variable.id));
     setVariableNames(
-      matrix!.getVariables().map((variable) => variable.variable),
+      matrix!
+        .getVariables()
+        .map((variable) => `${variable.variable} (${variable.id})`),
     );
     setSampleMatrix(matrix!.getBigNumberMatrixValuesOnly());
     setSampleVector(matrix!.getVariables().map(() => bignumber(0)));
