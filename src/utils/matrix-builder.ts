@@ -51,19 +51,20 @@ export class MatrixBuilder {
 
     // Fill the diagonal with 1s
     // (no effect on the variables themselves)
-    for (let i = 0; i <= this.variableIds.length - 1; i++) {
+    for (let i = 0; i < this.variableIds.length; i++) {
       this.matrix[i][i] = { value: bignumber(1) };
     }
   }
 
   private calculateActiveSums(): number[] {
     return this.variables.map((variable) =>
-      this.interactions
-        .filter((interaction) => interaction.variableId === variable.id)
-        .reduce<number>(
-          (sum, interaction) => sum + Math.abs(interaction.valueSelfDefined),
-          0,
-        ),
+      this.interactions.reduce(
+        (sum, interaction) =>
+          interaction.variableId === variable.id
+            ? sum + Math.abs(interaction.valueSelfDefined)
+            : sum,
+        0,
+      ),
     );
   }
 
@@ -73,12 +74,13 @@ export class MatrixBuilder {
 
   private calculatePassiveSums(): number[] {
     return this.variables.map((variable) =>
-      this.interactions
-        .filter((interaction) => interaction.impactVariableId === variable.id)
-        .reduce<number>(
-          (sum, interaction) => sum + Math.abs(interaction.valueSelfDefined),
-          0,
-        ),
+      this.interactions.reduce(
+        (sum, interaction) =>
+          interaction.impactVariableId === variable.id
+            ? sum + Math.abs(interaction.valueSelfDefined)
+            : sum,
+        0,
+      ),
     );
   }
 
@@ -104,9 +106,10 @@ export class MatrixBuilder {
    * Quitient: active sum divided by passive sum times 100.
    */
   private calculateQuotient(): number[] {
-    return this.activeSums.map(
-      (activeSum, index) => (activeSum / this.passiveSums[index]) * 100,
-    );
+    return this.activeSums.map((activeSum, index) => {
+      const passiveSum = this.passiveSums[index];
+      return passiveSum === 0 ? 0 : (activeSum / passiveSum) * 100;
+    });
   }
 
   public getProductOfSums(): number[] {
@@ -118,16 +121,9 @@ export class MatrixBuilder {
   }
 
   /**
-   * @returns The matrix as BigNumber.
+   * @returns The matrix optionally including the sources of the interactions.
    */
-  public getBigNumberMatrix(): (IMatrixEntry | null)[][] {
-    return this.matrix;
-  }
-
-  /**
-   * @returns The matrix.
-   */
-  public getMatrix() {
+  public getMatrixWithSources() {
     return this.matrix.map((row) =>
       row.map((entry) => {
         if (entry === null) {
@@ -143,20 +139,11 @@ export class MatrixBuilder {
   }
 
   /**
-   * @returns The matrix values only, without the ids and sums.
+   * @returns The matrix values only.
    */
-  public getBigNumberMatrixValuesOnly(): BigNumber[][] {
+  public getMatrix(): BigNumber[][] {
     return this.matrix.map((row) =>
       row.map((entry) => entry?.value ?? bignumber(0)),
-    );
-  }
-
-  /**
-   * @returns The matrix values only, without the ids and sums.
-   */
-  public getMatrixValuesOnly(): number[][] {
-    return this.matrix.map((row) =>
-      row.map((entry) => entry?.value.toNumber() ?? 0),
     );
   }
 

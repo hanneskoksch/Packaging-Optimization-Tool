@@ -59,7 +59,7 @@ export const useExperimentalPageStore = create<ExperimentalState>()((set) => ({
       variableNames: matrix!
         .getVariables()
         .map((variable) => `${variable.variable} (${variable.id})`),
-      sampleMatrix: matrix!.getBigNumberMatrixValuesOnly(),
+      sampleMatrix: matrix!.getMatrix(),
       sampleVector: newSampleVector,
       sampleVectorInverse: newSampleVector,
     }));

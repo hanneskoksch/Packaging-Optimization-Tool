@@ -30,7 +30,7 @@ function MatrixTable({ variables, interactions }: IProps) {
     [variables, interactions],
   );
 
-  const matrixValues = matrix.getMatrix();
+  const matrixValues = matrix.getMatrixWithSources();
 
   const getTailwindColor = (value: number | null | undefined) => {
     value = Number(value);
