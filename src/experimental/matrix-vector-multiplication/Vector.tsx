@@ -45,9 +45,11 @@ function Vector({
         <TableBody>
           {variables.map((variable, index) => (
             <TableRow key={index}>
-              <TableCell className="border font-bold">{variable}</TableCell>
+              <TableCell className="border font-bold p-0">
+                <div className="p-2">{variable}</div>
+              </TableCell>
               <TableCell
-                className={`border ${highlighted && "bg-yellow-200"} hover:bg-green-200`}
+                className={`border ${highlighted && "bg-yellow-200"} hover:bg-green-200 p-0`}
               >
                 <HoverCard
                   openDelay={10} // open new hove card slightly delayed after closing the previous one without delay
@@ -59,7 +61,7 @@ function Vector({
                   }
                 >
                   <HoverCardTrigger asChild>
-                    <div>{values[index].toString()}</div>
+                    <div className="p-2">{values[index].toString()}</div>
                   </HoverCardTrigger>
                   <HoverCardContent asChild sideOffset={50}>
                     {lastVectorValues && matrix && (
