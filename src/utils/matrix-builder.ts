@@ -100,11 +100,12 @@ export class MatrixBuilder {
   }
 
   /**
-   * Calculate the quotient of the active sum divided by the passive sum of each variable.
+   * Calculate the quotient of each variable.
+   * Quitient: active sum divided by passive sum times 100.
    */
   private calculateQuotient(): number[] {
     return this.activeSums.map(
-      (activeSum, index) => activeSum / this.passiveSums[index],
+      (activeSum, index) => (activeSum / this.passiveSums[index]) * 100,
     );
   }
 
