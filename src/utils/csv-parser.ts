@@ -17,7 +17,7 @@ const rowDataToVariables = (rows: any[]): ICsvVariable[] => {
       // let all strings start with uppercase
       .map((s) => s.charAt(0).toUpperCase() + s.slice(1)),
     category: row[1] as string,
-    id: row[2] as number,
+    id: Number(row[2]),
     variable: row[3] as string,
     variableSource: [row[4], row[5], row[6], row[7]]
       // only use rows if they are not empty
@@ -43,12 +43,12 @@ const rowDataToInteractions = (rows: any[]): ICsvInteraction[] => {
   }
 
   return rows.map((row) => ({
-    variableId: row[0] as number,
+    variableId: Number(row[0]),
     variable: row[1] as string,
-    impactVariableId: row[2] as number,
+    impactVariableId: Number(row[2]),
     impactVariable: row[3] as string,
     value: row[4] as string,
-    valueSelfDefined: row[5] as number,
+    valueSelfDefined: Number(row[5]),
     source: row[6] as string,
     description: row[7] as string,
   }));
