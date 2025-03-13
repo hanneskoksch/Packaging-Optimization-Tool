@@ -62,8 +62,7 @@ const ScatterChart = ({ showImpactAreas, variablesImpacts }: IProps) => {
       tooltip: {
         callbacks: {
           label: (context) => {
-            const impact = variablesImpacts[context.dataIndex];
-            return `${impact.variable.variable}: ${impact.passiveSum} passive, ${impact.activeSum} active`;
+            return `${context.dataset.label}: ${context.parsed.x} passive, ${context.parsed.y} active`;
           },
         },
       },
