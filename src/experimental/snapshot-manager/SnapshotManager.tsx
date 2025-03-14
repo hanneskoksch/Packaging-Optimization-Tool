@@ -9,11 +9,12 @@ import {
   ExperimentalState,
   useExperimentalPageStore,
 } from "@/states/experimental-page-store";
+import { Input } from "@/components/ui/input"; // Import shadcn Input
 
 // Zustand State Snapshot Manager
 export default function SnapshotManager() {
   const store = useExperimentalPageStore();
-  const { snapshots, addSnapshot } = useSnapshotStore();
+  const { snapshots, addSnapshot, updateSnapshotName } = useSnapshotStore();
 
   const { isExpanded, toggleExpand } = useSnapshotStore();
 
@@ -25,7 +26,7 @@ export default function SnapshotManager() {
     useExperimentalPageStore.setState(snapshot);
   };
 
-  const downloadSnapshot = (snapshot: ExperimentalState) => {
+  const downloadSnapshot = (snapshot: ExperimentalState, name: string) => {
     const json = JSON.stringify(
       snapshot,
       (_, value) =>
@@ -40,7 +41,7 @@ export default function SnapshotManager() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `snapshot-${Date.now()}.json`;
+    a.download = `experimental-snapshot-${name}-${new Date().toISOString()}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -96,8 +97,8 @@ export default function SnapshotManager() {
         className="overflow-hidden"
       >
         <p className="text-xs">
-          Take a snapshot of the state of the experimental page, jump back to
-          it, download it, or import it.
+          Take a snapshot of the state of the experimental page, rename it, jump
+          back to it, download it, or import it.
         </p>
         {/* Snapshot Control Buttons */}
         <div className="flex gap-2 my-3">
@@ -123,18 +124,20 @@ export default function SnapshotManager() {
         {/* Snapshot List */}
         <div className="max-h-48 overflow-y-auto">
           {snapshots.length > 0 ? (
-            snapshots.map(({ id, state, date }) => (
+            snapshots.map(({ id, name, state, date }) => (
               <Card
                 key={id}
                 className="mb-2 py-0.5 px-2 flex justify-between items-center"
               >
-                <CardContent className="p-1">
-                  <p className="text-xs">
-                    Snapshot {id} •{" "}
-                    <span className="text-gray-500">
-                      {date.toLocaleTimeString()}
-                    </span>
-                  </p>
+                <CardContent className="p-1 flex items-center gap-2">
+                  <Input
+                    className="text-xs font-semibold border-none p-0 shadow-none focus-visible:ring-0"
+                    value={name}
+                    onChange={(e) => updateSnapshotName(id, e.target.value)}
+                  />
+                  <span className="text-gray-500 text-xs">
+                    {date.toLocaleTimeString()}
+                  </span>
                 </CardContent>
                 <div className="flex gap-1">
                   <Button
@@ -147,7 +150,7 @@ export default function SnapshotManager() {
                   <Button
                     size="icon"
                     variant="ghost"
-                    onClick={() => downloadSnapshot(state)}
+                    onClick={() => downloadSnapshot(state, name)}
                   >
                     <Download className="w-4 h-4" />
                   </Button>
