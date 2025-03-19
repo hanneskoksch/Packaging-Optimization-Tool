@@ -1,0 +1,10 @@
+﻿Sustainability;Category;ID Variable;Variable;Variable source;Variable source;Variable source;Variable source;Description;Description source;Country;Packaged product
+Ecologic;Packaging material;45;Use of recycled materials;(Liu et al. 2023);(Lopez-Aguilar et al. 2022);;;Beschreibt den Einsatz von Rezyklat, z.B. recycelter Faserstoff oder Kunststoff;(eigene Beschreibung);none;none
+Ecologic/economic;Structural packaging design;56;Amount of packaging material;(Liu et al. 2023);(Molina-Besch und Pålsson 2016);;;Beschreibt die Menge an eigesetztem Verpackungsmaterial im Hinblick auf das Volumen;(eigene Beschreibung);none;none
+Ecologic/economic;Structural packaging design;55;Packaging size;(Liu et al. 2023);(Lopez-Aguilar et al. 2022);(Molina-Besch und Pålsson 2016);;Beschreibt die Verpackungsdimensionen (HxBxL);(eigene Beschreibung);none;none
+Economic;Market appeal;16;Protective performance ;(Nguyen et al. 2020);;;;Beschreibt die schützende Wirkung einer Verpackung;(eigene Beschreibung);Vietnam;none
+Social;Consumer–packaging interaction;17;Consumer perceptions;(Nguyen et al. 2020);;;;Beschreibt die Kundenwahrnehmung ;(eigene Beschreibung);none;none
+Economic;Cost;39;Cost;(Liu et al. 2023);(Molina-Besch und Pålsson 2016);(Hafsa et al. 2022);(Lau und Wong 2024);Beschreibt die Kosten, z.B. Materialkosten, Produktionskosten, Logistikkosten, etc.);(eigene Beschreibung);none;none
+Economic;Production;46;Production rate;(Liu et al. 2023);;;;Beschreibt die Produktionsrate;(eigene Beschreibung);none;none
+Ecologic/economic/social;Packaged product;104;Product dimensions;(Molina-Besch und Pålsson 2016);;;;Beschreibt die Produktdimensionen (HxBxL);(eigene Beschreibung);none;none
+Ecologic;End of life;69;Recyclability;(Camilleri et al. 2023);(Lopez-Aguilar et al. 2022);;;Beschreibt die Recyclingfähigkeit;(eigene Beschreibung);none;none
