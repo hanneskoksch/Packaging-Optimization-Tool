@@ -1,16 +1,12 @@
 # Packaging Optimization Tool
 
-A web tool for learning about packaging variables, visually exploring their interactions, and experimenting with simulation approaches. 
-
-
+A web tool for learning about packaging variables, visually exploring their interactions, and experimenting with simulation approaches.
 
 ## Getting Started
 
 1. Clone the repository and run `npm install` or preferably `pnpm install`.
 2. Run the application with `npm run` or `pnpm run`.
-3. Experiment in the experimental tab or get started with your own data by uploading a CSV file. 
-
-
+3. Experiment in the experimental tab or get started with your own data by uploading a CSV file.
 
 ## Technology
 
